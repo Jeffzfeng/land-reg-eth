@@ -1,5 +1,5 @@
 # README #
-
+This is the starter code for our solander system.
 This README would normally document whatever steps are necessary to get your application up and running.
 
 ### What is this repository for? ###
