@@ -12,7 +12,7 @@ compiledCode = solc.compile(code)
 abiDefinition = JSON.parse(compiledCode.contracts[':Land'].interface)
 byteCode = compiledCode.contracts[':Land'].bytecode
 solanderContract = web3.eth.contract(abiDefinition)
-deployedContract = solanderContract.new({data: byteCode, from: web3.eth.accounts[0] , gas: 4700000})
+deployedContract = solanderContract.new({data: byteCode, from: web3.eth.accounts[0] , gas: 600000})
 deployedContract.address
 contractInstance = solanderContract.at(deployedContract.address)
 
@@ -21,6 +21,7 @@ contractInstance = solanderContract.at(deployedContract.address)
 contractInstance.createUserRecord('Jeff','Feng', {from: web3.eth.accounts[0]})
 contractInstance.getAllUserRecords()
 contractInstnace.getUserRecord(1)
+contractIntance.createLand(1234, 
 
 //web3 functions
 //check balance, in BigNumber, use console.log to parse
