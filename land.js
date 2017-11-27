@@ -18,9 +18,21 @@ deployedContract = solanderContract.new({data: byteCode, from: web3.eth.accounts
 deployedContract.address
 contractInstance = solanderContract.at(deployedContract.address)
 
-//useful functions to test
-//contract calls
-//contractInstance.createUserRecord('Girija','Feng', {from: web3.eth.accounts[0]})
-//contractInstance.getAllUserRecords()
-//contractInstnace.getUserRecord(1)
-contractInstance.createNewLand('06/03/1995', 1, 1,  {from: web3.eth.accounts[0]});
+
+// SEED 
+// land data
+contractInstance.newLandRecord('06/03/1995', 1, 44,  {from: web3.eth.accounts[0]});
+contractInstance.newLandRecord('06/03/1997', 2, 73,  {from: web3.eth.accounts[0]});
+contractInstance.newLandRecord('06/03/1998', 3, 89,  {from: web3.eth.accounts[0]});
+contractInstance.newLandRecord('06/03/2000', 4, 90,  {from: web3.eth.accounts[0]});
+// user data
+contractInstance.newUserRecord('Jeff', 'Feng', 1,  {from: web3.eth.accounts[0]});
+contractInstance.newUserRecord('Perb', 'Wong', 2,  {from: web3.eth.accounts[0]});
+contractInstance.newUserRecord('G', 'K', 3,  {from: web3.eth.accounts[0]});
+contractInstance.newUserRecord('Proud', 'Son', 4,  {from: web3.eth.accounts[0]});
+// transfer data
+contractInstance.newLandTransfer(1, 1, 1, 2, '11/20/2017', {from: web3.eth.accounts[0]});
+contractInstance.newLandTransfer(2, 2, 1, 2, '11/21/2017', {from: web3.eth.accounts[0]});
+contractInstance.newLandTransfer(3, 4, 3, 2, '11/22/2017', {from: web3.eth.accounts[0]});
+contractInstance.newLandTransfer(4, 3, 2, 1, '11/22/2017', {from: web3.eth.accounts[0]});
+
