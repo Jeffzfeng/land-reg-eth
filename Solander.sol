@@ -20,7 +20,7 @@ contract Solander {
         // boolean value to indicate active/inactiveness
         bool active;
         // can be to array of dates
-        uint128 point1;
+        uint128[] points;
     } 
     
     /*
@@ -42,6 +42,10 @@ contract Solander {
     struct userInfo{
         string fname;
         string lname;
+        string bdate;
+        uint32 lawyer_pkey;
+        uint32 user_pkey;
+        address wallet;
         uint32[] land_owned;
     }
     
@@ -54,28 +58,36 @@ contract Solander {
     // Every transfer is uniquely identified with a transfer_id (a combination of the hash of the timestamp - seller/buyer SIN and PIN)
     mapping(uint64 => landTransferInfo) landTransferRecords;
     
-    function newLandRecord (string _date_created, uint128 _point1, uint32 PIN_hash) public returns (bool){
+    function newLandRecord (string _date_created, uint32 PIN_hash) public returns (bool){
         var landRecord = landRecords[PIN_hash];
         landRecord.date_created = _date_created;
-        landRecord.point1 = _point1;
         return true;
     }
     
-    function getLandRecord (uint32 PIN_hash) public view returns (bool, string, uint128 point1) {
+    function getLandRecord (uint32 PIN_hash) public view returns (bool, string, uint128[]) {
         var landRecord = landRecords[PIN_hash];
-        return (landRecord.active, landRecord.date_created, landRecord.point1);
+        return (landRecord.active, landRecord.date_created, landRecord.points);
     }
     
-    function newUserRecord (string _fname, string _lname, uint32 SIN_hash) public returns (bool) {
+    function newUserRecord (string _fname, string _lname, uint32 SIN_hash, string _bdate) public returns (bool) {
         var userRecord = userRecords[SIN_hash];
         userRecord.fname = _fname;
         userRecord.lname = _lname;
+        userRecord.bdate = _bdate;
         return true;
     }
     
-    function getUserRecord (uint32 SIN_hash) public view returns (string, string, uint32[]) {
+    function updateCryptoInfo (address _wallet, uint32 _lawyer_pkey, uint32 _user_pkey, uint32 SIN_hash) public returns (bool) {
         var userRecord = userRecords[SIN_hash];
-        return (userRecord.fname, userRecord.lname, userRecord.land_owned);
+        userRecord.wallet = _wallet;
+        userRecord.lawyer_pkey = _lawyer_pkey;
+        userRecord.user_pkey = _user_pkey;
+        return true;    
+    }
+    
+    function getUserRecord (uint32 SIN_hash) public view returns (string, string, string, uint32, uint32, address, uint32[]) {
+        var userRecord = userRecords[SIN_hash];
+        return (userRecord.fname, userRecord.lname, userRecord.bdate, userRecord.lawyer_pkey, userRecord.user_pkey, userRecord.wallet, userRecord.land_owned);
     }
     
     function newLandTransfer (uint64 transfer_id, uint32 _PIN_hash, uint32 _seller_SIN_hash, uint32 _buyer_SIN_hash, string _transfer_date) public returns (bool) {
@@ -84,5 +96,11 @@ contract Solander {
         landTransferRecord.seller_SIN_hash = _seller_SIN_hash;
         landTransferRecord.buyer_SIN_hash = _buyer_SIN_hash;
         landTransferRecord.transfer_date = _transfer_date;
+        return true;
+    }
+    
+    function getLandTransferRecord (uint64 transfer_id) public view returns (uint32, uint32, uint32, string) {
+        var landTransferRecord = landTransferRecords[transfer_id];
+        return (landTransferRecord.PIN_hash, landTransferRecord.seller_SIN_hash, landTransferRecord.buyer_SIN_hash, landTransferRecord.transfer_date);
     }
 }
