@@ -2,79 +2,63 @@
 // lower camelCase for struct
 // plural lower camelCase for object
 // snake_case for attributes 
+
 pragma solidity ^0.4.18;
+
 
 contract Solander {
     
-    struct landTransferData{
-        uint buyer_id;
-        uint seller_id;
-        uint PIN;
-        // SIN in the future
-        // other transfer details
+    /*
+        This struct holds all the information that pertains to a piece of land:
+            dateCreated -> a string value in MM/DD/YYYY that indicates the creation of the piece of land (PIN)
+            active -> indicates whether the piece of land is currently legally in use, PIN is archived otherwise
+            points_array -> the lat/lon points which describe the dimensions of the piece of land
+    */
+    struct landInfo{
+        // date stamp of when PIN was created
+        string dateCreated;
+        // boolean value to indicate active/inactiveness
+        bool active;
+        // can be to array of dates
+        uint128 point1;
+    } 
+    
+    struct landTransferInfo{
+        
     }
     
-    
-    struct userRecordInfo {
-        string user_fname; 
-        string user_lname;
+    struct userInfo{
+        string fname;
+        string lname;
+        uint32[] land_owned;
     }
     
-    mapping(uint => landTransferData) landTransfers;
-    mapping(uint => userRecordInfo) userRecords;
+    // Every piece of land is uniquely identified by a PIN (or a hash of the PIN)
+    mapping(uint32 => landInfo) landRecords;
     
-    //holds all user_ids
-    uint[] user_id_array;
-    //holds all transfer_ids
-    uint[] land_transfer_id_array;
-    uint user_id;
-    uint land_transfer_id;    
-
-    // constructor (default) no args
-    function Solander () public {
-        user_id = 1;
-        land_transfer_id =1;
-    }
-
-    // free to call
-    // returns array of user ids
-    function getAllUserRecords () view public returns (uint[]) {
-        return user_id_array;
+    // Every user is uniquely identified by a SIN (or a hash of the SIN)
+    mapping(uint32 => userInfo) userRecords;    
+    
+    function newLandRecord (string _dateCreated, uint128 _point1, uint32 PIN) public returns (bool){
+        var landRecord = landRecords[PIN];
+        landRecord.dateCreated = _dateCreated;
+        landRecord.point1 = _point1;
+        return true;
     }
     
-    //free to call
-    // returns array of land transfer ids
-    function getAllTransferRecords () view public returns (uint[]) {
-        return land_transfer_id_array;
+    function getLandRecord (uint32 PIN) public view returns (bool, string, uint128 point1) {
+        var landRecord = landRecords[PIN];
+        return (landRecord.active, landRecord.dateCreated, landRecord.point1);
     }
     
-    // costs ETH to call!!
-    // function to create new user record for a given fname, lname
-    function createUserRecord (string _user_fname, string _user_lname) public returns (uint) {
-        var newUserRecord = userRecords[user_id];
-        newUserRecord.user_fname = _user_fname;
-        newUserRecord.user_lname = _user_lname;
-        //uint curr_user_id = user_id;
-        //user_id_array.push(user_id);
-        user_id += 1;
-        return user_id;
+    function newUserRecord (string _fname, string _lname, uint32 SIN) public {
+        var userRecord = userRecords[SIN];
+        userRecord.fname = _fname;
+        userRecord.lname = _lname;
     }
     
-    //returns fname, lname for a given user id
-    function getUserRecord (uint _user_id) view public returns (string, string) {
-        var resultUserRecord = userRecords[_user_id];
-        return (resultUserRecord.user_fname, resultUserRecord.user_lname);
-    }
-    //  costs ETH to call!!
-    // function to create a new land transfer for a given pin, and fname, lname (seller/buyer)
-    function createLandTransfer (uint PIN, string _seller_fname, string _seller_lname, string _buyer_fname, string _buyer_lname) public returns (uint) {
-        var newLandTranfer = landTransfers[land_transfer_id];
-        uint _seller_id = createUserRecord(_seller_fname, _seller_lname);
-        uint _buyer_id = createUserRecord(_buyer_fname, _buyer_lname);
-        newLandTranfer.seller_id = _seller_id;
-        newLandTranfer.buyer_id = _buyer_id;
-        land_transfer_id_array.push(land_transfer_id);
-        uint curr_land_transfer_id = land_transfer_id;
-        return curr_land_transfer_id;
+    function getUserRecord (uint32 SIN) public view returns (string, string, uint32[]) {
+        var userRecord = userRecords[SIN];
+        return (userRecord.fname, userRecord.lname, userRecord.land_owned);
     }
 }
