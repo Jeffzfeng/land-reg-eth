@@ -9,18 +9,7 @@ This README would normally document whatever steps are necessary to get your app
 * Version
 * [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
 
-### How do I get set up? ###
-* Install node, npm, testrpc, web3
-* git clone the repo
-* Run Testrpc in one terminal
-* Run node in one terminal
-* Copy the code in web3js into the node terminal
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+Ubuntu 16.04 LTS
 
 ### Running Truffle
 * npm install -g truffle
