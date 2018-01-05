@@ -22,6 +22,12 @@ This README would normally document whatever steps are necessary to get your app
 * How to run tests
 * Deployment instructions
 
+### Running Truffle
+* npm install -g truffle
+* Truffle compile
+* Truffle migrate
+* Truffle test
+
 ### Contribution guidelines ###
 
 * Writing tests
