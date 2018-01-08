@@ -13,7 +13,20 @@ Ubuntu 16.04 LTS
 
 ### Running Truffle
 * npm install -g truffle
+* Truffle init
 * Truffle compile
+	
+truffle.js file should contain the following before running truffle migrate:
+	module.exports = {
+   		networks: {
+   			development: {
+   				host: "localhost",
+   				port: 8545,
+   				network_id: "*" // Match any network id
+  			}
+ 		}
+	};
+
 * Truffle migrate
 * Truffle test
 
