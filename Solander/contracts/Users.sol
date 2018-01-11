@@ -23,5 +23,18 @@ contract Users {
         var userRecord = userRecords[SIN_hash];
         return (userRecord.fname, userRecord.lname, userRecord.bdate);
     }
-
+    
+    uint32 user; 
+    
+    function initUsers () public {
+        user = 0;
+    }
+    
+    function setUsers (uint32 newUser) public {
+        user = newUser;
+    }
+    
+    function getUsers () public returns (uint32) {
+        return user;
+    }
 }
