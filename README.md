@@ -1,25 +1,17 @@
-# README #
-I am jeff, read me
-This is the starter code for our solander system.
-This README would normally document whatever steps are necessary to get your application up and running.
+# SOLANDER README
 
-### What is this repository for? ###
+## Development Guide
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+### Environment Setup
+1. Create a VirtualBox VM using Ubuntu 16.04 LTS
+2. `npm install -g truffle`
+3. `Truffle init`
 
-Ubuntu 16.04 LTS
-
-###### Running Truffle ######
-1) * npm install -g truffle
-2) * Truffle init
-(steps 1 and 2 only need to be done for initial creation of project)
-
-3) * Truffle compile
- - 	Recompile needed when contracts are changed
-
-4) ensure that all truffle configurations are set correctly in the truffle.js file, similar to below:
+### Running Truffle
+1. `Truffle compile`
+    - Compile each time a contract is changed
+    
+2. Ensure that all Truffle configuration settings are set correctly in the truffle.js file. See an example below:
 
 truffle.js file should contain the following before running truffle migrate:
 	module.exports = {
@@ -31,43 +23,31 @@ truffle.js file should contain the following before running truffle migrate:
   			}
  		}
 	};
-*
-5) ensure that an ethereum test environment is running on the background (I recommend using testRPC for now)
 
-6) * Truffle migrate
- - this runs the JS files under migrations/x_migrations.js 
- - deploys the contract onto the testRPC environment 
- - updates the current blockchain environment as well if any changes are made due to compilation
+3. Ensure that an Ethereum test environment is running on the background
+    - `Truffle Develop` creates an appropriate environment
+    - testRPC also works
+
+4. `Truffle migrate` 
+    - Runs the JS files under migrations/x_migrations.js 
+    - Deploys contracts onto the environment 
+    - Updates the current environment if any changes were made due to compilation
  
-7) * Truffle test 
- - Two types of tests can be written for test different aspect of the functionality, both are found under ./test
- -  Javascript tests:
- -   Tests for iteraction between user interface and contracts (good for scenario testing)
- -  Solidity tests:
- -   Tests for bare functionality of contracts itself (unit testing)
-	
- Can be ran with "truffle test", after ensuring that it is running on blockchain and all migrations have been ran
+5. `Truffle test`
+    - Runs Javascript and Solidity tests (listed under ./test)
+    - Ensure that an Ethereum environment is active in the background and all migrations have been run
+    - Javascript
+        - Test iteraction between contracts and the user interface (e.g. scenario testing)
+    - Solidity
+        - Unit testing of contracts
 
-8) * Iteractive terminal for manual testing
- - Either run "truffle console" or "truffle develop"
- - Truffle console needs a seperate ethereum environment to be ran in the background, 
-   whereas truffle develop uses its own test environment.
- - You can treat this as basically the node terminal without the need of compiling and deploying.
- - All web3 libraries are already built in and can be ran, and the contracts are already deployed.
+### Iteractive Terminal for Manual Testing
+    - `Truffle Console` needs a separate Ethereum environment running in the background
+    - `Truffle Develop` uses its own test environment
+        - "You can treat this as basically the node terminal without the need of compiling and deploying"
+        - All web3 libraries are already built in and can be run, and the contracts are already deployed.
 
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
-
-### 
-
-### Extra resources ###
+## Extra resources
 Read through for extra reference at truffle framework official site:
-http://truffleframework.com/docs/getting_started/console 
+* http://truffleframework.com/docs/getting_started/console
+* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
