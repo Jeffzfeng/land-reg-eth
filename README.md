@@ -25,7 +25,7 @@
 >	};  
 
 3. Ensure that an Ethereum test environment is running on the background
-    - `truffle Develop` creates an appropriate environment
+    - `truffle develop` creates an appropriate environment
     - testRPC also works
 
 4. `truffle migrate` 
@@ -42,8 +42,8 @@
         - Unit testing of contracts
 
 ### Iteractive Terminal for Manual Testing
-- `truffle Console` needs a separate Ethereum environment running in the background
-- `truffle Develop` uses its own test environment
+- `truffle console` needs a separate Ethereum environment running in the background
+- `truffle develop` uses its own test environment
     - "You can treat this as basically the node terminal without the need of compiling and deploying"
     - All web3 libraries are already built in and can be run, and the contracts are already deployed.
 
