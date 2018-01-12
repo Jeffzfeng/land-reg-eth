@@ -13,16 +13,16 @@
     
 2. Ensure that all Truffle configuration settings are set correctly in the truffle.js file. See an example below:
 
-truffle.js file should contain the following before running truffle migrate:
-	module.exports = {
-   		networks: {
-   			development: {
-   				host: "localhost",
-   				port: 8545,
-   				network_id: "*" // Match any network id
-  			}
- 		}
-	};
+> truffle.js file should contain the following before running truffle migrate:
+> 	module.exports = {
+>  		networks: {
+>  			development: {
+>  				host: "localhost",
+>  				port: 8545,
+>  				network_id: "*" // Match any network id
+> 			}
+>		}
+>	};
 
 3. Ensure that an Ethereum test environment is running on the background
     - `Truffle Develop` creates an appropriate environment
@@ -42,12 +42,12 @@ truffle.js file should contain the following before running truffle migrate:
         - Unit testing of contracts
 
 ### Iteractive Terminal for Manual Testing
-    - `Truffle Console` needs a separate Ethereum environment running in the background
-    - `Truffle Develop` uses its own test environment
-        - "You can treat this as basically the node terminal without the need of compiling and deploying"
-        - All web3 libraries are already built in and can be run, and the contracts are already deployed.
+- `Truffle Console` needs a separate Ethereum environment running in the background
+- `Truffle Develop` uses its own test environment
+    - "You can treat this as basically the node terminal without the need of compiling and deploying"
+    - All web3 libraries are already built in and can be run, and the contracts are already deployed.
 
 ## Extra resources
-Read through for extra reference at truffle framework official site:
-* http://truffleframework.com/docs/getting_started/console
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+- Read through for extra reference at truffle framework official site:
+    - http://truffleframework.com/docs/getting_started/console
+    - [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
