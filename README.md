@@ -13,16 +13,16 @@
     
 2. Ensure that all Truffle configuration settings are set correctly in the truffle.js file. See an example below:
 
-> truffle.js file should contain the following before running truffle migrate:
-> 	module.exports = {
->  		networks: {
->  			development: {
->  				host: "localhost",
->  				port: 8545,
->  				network_id: "*" // Match any network id
-> 			}
->		}
->	};
+> truffle.js file should contain the following before running truffle migrate:  
+> 	module.exports = {  
+>  		networks: {  
+>  			development: {  
+>  				host: "localhost",  
+>  				port: 8545,  
+>  				network_id: "*" // Match any network id  
+> 			}  
+>		}  
+>	};  
 
 3. Ensure that an Ethereum test environment is running on the background
     - `Truffle Develop` creates an appropriate environment
