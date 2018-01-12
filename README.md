@@ -5,10 +5,10 @@
 ### Environment Setup
 1. Create a VirtualBox VM using Ubuntu 16.04 LTS
 2. `npm install -g truffle`
-3. `Truffle init`
+3. `truffle init`
 
 ### Running Truffle
-1. `Truffle compile`
+1. `truffle compile`
     - Compile each time a contract is changed
     
 2. Ensure that all Truffle configuration settings are set correctly in the truffle.js file. See an example below:
@@ -25,15 +25,15 @@
 >	};  
 
 3. Ensure that an Ethereum test environment is running on the background
-    - `Truffle Develop` creates an appropriate environment
+    - `truffle Develop` creates an appropriate environment
     - testRPC also works
 
-4. `Truffle migrate` 
+4. `truffle migrate` 
     - Runs the JS files under migrations/x_migrations.js 
     - Deploys contracts onto the environment 
     - Updates the current environment if any changes were made due to compilation
  
-5. `Truffle test`
+5. `truffle test`
     - Runs Javascript and Solidity tests (listed under ./test)
     - Ensure that an Ethereum environment is active in the background and all migrations have been run
     - Javascript
@@ -42,8 +42,8 @@
         - Unit testing of contracts
 
 ### Iteractive Terminal for Manual Testing
-- `Truffle Console` needs a separate Ethereum environment running in the background
-- `Truffle Develop` uses its own test environment
+- `truffle Console` needs a separate Ethereum environment running in the background
+- `truffle Develop` uses its own test environment
     - "You can treat this as basically the node terminal without the need of compiling and deploying"
     - All web3 libraries are already built in and can be run, and the contracts are already deployed.
 
