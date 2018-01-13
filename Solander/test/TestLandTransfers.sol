@@ -25,6 +25,7 @@ contract TestLandTransfers {
 
 	}
 	
+	
 	function testCreateLandTransfer_fail_case() public {
 		Users user = new Users();
 		bool expected_result = false;

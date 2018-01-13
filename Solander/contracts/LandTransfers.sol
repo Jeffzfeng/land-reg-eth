@@ -22,15 +22,15 @@ contract LandTransfers {
         return address(this);
     }
     
-    function getAllLandTransferPINs () public view returns (uint32[]) {
+    function getAllPINs () public view returns (uint32[]) {
         return PIN_hash_array;
     }
     
-    function getNumberOfLandTransfers () public view returns (uint) {
+    function getNumLandTransfers () public view returns (uint) {
         return PIN_hash_array.length;
     }
     
-    function getLandTransfer (uint32 PIN_hash) view public returns (uint32, uint32) {
+    function getLandTransfer_fromPIN (uint32 PIN_hash) view public returns (uint32, uint32) {
         var userRecord = landTransfers[PIN_hash];
         return (userRecord.buyer_id, userRecord.seller_id);
     }
