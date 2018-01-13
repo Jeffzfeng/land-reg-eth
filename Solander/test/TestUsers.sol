@@ -11,7 +11,7 @@ contract TestUsers {
 
 	Users users = Users(DeployedAddresses.Users());
 	
-	function testCreateUserRecord() {
+	function testCreateUserRecord() public {
 		bool returnedResult = users.createUserRecord('Girija', 'Khandekar', 123, 'Sept21');
 		bool expected_result = true;
 
