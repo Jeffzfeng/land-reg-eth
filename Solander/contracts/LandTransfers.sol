@@ -5,8 +5,8 @@ import "contracts/Users.sol";
 contract LandTransfers {
     
     struct landTransferInfo{
-        uint buyer_id;
-        uint seller_id;
+        uint32 buyer_id;
+        uint32 seller_id;
         bool init;
         // SIN in the future
         // other transfer details
