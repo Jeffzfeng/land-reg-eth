@@ -10,7 +10,7 @@ contract TestLandTransfers {
 
 	LandTransfers land_transfers = LandTransfers(DeployedAddresses.LandTransfers());
 	
-	function testLandTransfer_pass_case() public {
+	function testCreateLandTransfer_pass_case() public {
 		Users user = new Users();
 		bool expected_result = true;
 		bool returnedResult1 = user.createUserRecord('user1', 'user1', 1, '1/1/18');
@@ -24,8 +24,8 @@ contract TestLandTransfers {
 		Assert.equal(landresult, expected_result, "Land transfer from user1 to user2 not completed");
 
 	}
-
-	function testLandTransfer_fail_case() public {
+	
+	function testCreateLandTransfer_fail_case() public {
 		Users user = new Users();
 		bool expected_result = false;
 		

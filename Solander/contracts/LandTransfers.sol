@@ -11,9 +11,24 @@ contract LandTransfers {
         // SIN in the future
         // other transfer details
     }
+        
+    // an array which holds all the current ids of userRecords, can iterate and find all users with this array
+    uint32[] PIN_hash_array;
     
     // Every land parcel is uniquely identified by a PIN_hash
     mapping(uint32 => landTransferInfo) landTransfers;
+    
+    function returnContractAddress () public view returns (address) {
+        return address(this);
+    }
+    
+    function getAllLandTransferPINs () public view returns (uint32[]) {
+        return PIN_hash_array;
+    }
+    
+    function getNumberOfLandTransfers () public view returns (uint) {
+        return PIN_hash_array.length;
+    }
     
     function getLandTransfer (uint32 PIN_hash) view public returns (uint32, uint32) {
         var userRecord = landTransfers[PIN_hash];
@@ -36,8 +51,7 @@ contract LandTransfers {
             return false;
         }
         newLandTransfer.init = true;
-        //landTransferIDs[id_index] = PIN_hash;
-        //id_index += 1;
+        PIN_hash_array.push(PIN_hash);
         return true;
     }
 }
