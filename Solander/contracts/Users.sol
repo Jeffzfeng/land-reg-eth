@@ -8,15 +8,19 @@ contract Users {
         string bdate;
         bool init;
     }
-
+    
     // Every user is uniquely identified by a user_id (SIN_hash)
     mapping(uint32 => userInfo) userRecords;    
     
+    function returnContractAddress () public view returns (address) {
+        return address(this);
+    }
+    
     function createUserRecord (string _fname, string _lname, uint32 user_id, string _bdate) public returns (bool) {
         var userRecord = userRecords[user_id];
-        userRecord.fname = _fname;
-        userRecord.lname = _lname;
-        userRecord.bdate = _bdate;
+        //userRecord.fname = _fname;
+        //userRecord.lname = _lname;
+        //userRecord.bdate = _bdate;
         userRecord.init = true;
         return true;
     }

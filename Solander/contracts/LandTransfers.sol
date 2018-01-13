@@ -1,7 +1,7 @@
 pragma solidity ^0.4.18;
 
 import "contracts/Users.sol";
-    
+
 contract LandTransfers {
     
     struct landTransferInfo{
@@ -20,22 +20,24 @@ contract LandTransfers {
         return (userRecord.buyer_id, userRecord.seller_id);
     }
     
-    function createLandTransfer (uint32 PIN_hash, uint32 _buyer_id, uint32 _seller_id) public returns (bool) {
+    function createLandTransfer (address userAddress, uint32 PIN_hash, uint32 _buyer_id, uint32 _seller_id) public returns (bool) {
         var newLandTransfer = landTransfers[PIN_hash];
-        Users user = new Users();
-        if(user.userRecordExists(_seller_id)){
+        Users user = Users(userAddress);
+        if(user.userRecordExists(_seller_id) == true){
             newLandTransfer.seller_id = _seller_id;
         }
         else{
             return false;
         }
-        if(user.userRecordExists(_buyer_id)){
+        if(user.userRecordExists(_buyer_id) == true){
             newLandTransfer.buyer_id = _buyer_id;
         }
         else{
             return false;
         }
         newLandTransfer.init = true;
+        //landTransferIDs[id_index] = PIN_hash;
+        //id_index += 1;
         return true;
     }
 }
