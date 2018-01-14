@@ -18,13 +18,5 @@ contract TestUsers {
 		Assert.equal(returnedResult, expected_result, "Girija should be created as a user.");
 	}
 
-	function testgetUserRecord() public {
-		var data = users.getUserRecord_fromID(123).toString().split(',');
-		var efname = 'Girija';
-		var elname = 'Khandekar';
-		var ebday = 'Sept21';
-
-		Assert.equal(data[0], efname, "not stored");
-	}
 
 }
