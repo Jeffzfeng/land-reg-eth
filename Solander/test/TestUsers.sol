@@ -18,13 +18,26 @@ contract TestUsers {
 		Assert.equal(returnedResult, expected_result, "Girija should be created as a user.");
 	}
 
-	function testgetUserRecord() public {
-		var data = users.getUserRecord_fromID(123).toString().split(',');
-		var efname = 'Girija';
-		var elname = 'Khandekar';
-		var ebday = 'Sept21';
+	function testgetUserID_fromIndex() public {
+		uint32 userID_result = users.getUser_fromIndex(0);
+		uint32 userID_expected = 123;
+		Assert.equal(uint(userID_result), uint(userID_expected), "returned userID is incorrect");
+	}
 
-		Assert.equal(data[0], efname, "not stored");
+	function testuserRecordExists() public {
+		bool expected_result = true;
+		bool result = users.userRecordExists(123);
+		Assert.equal(expected_result, result, "User doesnt exist");
+	}
+
+	function testgetUserRecord_fromID() public {
+		bytes32 fname;
+		bytes32 lname;
+		bytes32 bday;
+		(fname, lname, bday) = users.getUserRecord_fromID(123);
+		bytes32 expected_fname = "Girija";
+		Assert.equal(expected_fname, fname, "Girija doesnt exist");
+
 	}
 
 }
