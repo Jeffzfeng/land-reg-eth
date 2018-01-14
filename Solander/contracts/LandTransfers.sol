@@ -1,6 +1,6 @@
 pragma solidity ^0.4.18;
 
-import "contracts/Users.sol";
+import "../contracts/Users.sol";
 
 contract LandTransfers {
     
