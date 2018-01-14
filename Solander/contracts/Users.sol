@@ -3,9 +3,9 @@ pragma solidity ^0.4.18;
 contract Users {
 
     struct userInfo{
-        bytes32 fname;
-        bytes32 lname;
-        bytes32 bdate;
+        string fname;
+        string lname;
+        string bdate;
         bool init;
     }
     
@@ -19,15 +19,15 @@ contract Users {
         return address(this);
     }
     
-    function getUser_fromIndex (uint index) public view returns (uint32) {
-        return userRecord_ids[index];
+    function getAllUserRecordsIDs () public view returns (uint32[]) {
+        return userRecord_ids;
     }
     
     function getNumberOfUserRecords () public view returns (uint) {
         userRecord_ids.length;
     }
     
-    function createUserRecord (bytes32 _fname, bytes32 _lname, uint32 user_id, bytes32 _bdate) public returns (bool) {
+    function createUserRecord (string _fname, string _lname, uint32 user_id, string _bdate) public returns (bool) {
         var userRecord = userRecords[user_id];
         userRecord.fname = _fname;
         userRecord.lname = _lname;
@@ -47,7 +47,7 @@ contract Users {
         }
     }
     
-    function getUserRecord_fromID (uint32 user_id) public view returns (bytes32, bytes32, bytes32) {
+    function getUserRecord_fromID (uint32 user_id) public view returns (string, string, string) {
         var userRecord = userRecords[user_id];
         return (userRecord.fname, userRecord.lname, userRecord.bdate);
     }
