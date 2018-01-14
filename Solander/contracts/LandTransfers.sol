@@ -22,15 +22,15 @@ contract LandTransfers {
         return address(this);
     }
     
-    function getAllLandTransferPINs () public view returns (uint32[]) {
-        return PIN_hash_array;
+    function getPIN_fromIndex (uint index) public view returns (uint32) {
+        return PIN_hash_array[index];
     }
     
-    function getNumberOfLandTransfers () public view returns (uint) {
+    function getNumLandTransfers () public view returns (uint) {
         return PIN_hash_array.length;
     }
     
-    function getLandTransfer (uint32 PIN_hash) view public returns (uint32, uint32) {
+    function getLandTransfer_fromPIN (uint32 PIN_hash) view public returns (uint32, uint32) {
         var userRecord = landTransfers[PIN_hash];
         return (userRecord.buyer_id, userRecord.seller_id);
     }
@@ -38,14 +38,14 @@ contract LandTransfers {
     function createLandTransfer (address userAddress, uint32 PIN_hash, uint32 _buyer_id, uint32 _seller_id) public returns (bool) {
         var newLandTransfer = landTransfers[PIN_hash];
         Users user = Users(userAddress);
-        if(user.userRecordExists(_seller_id) == true){
-            newLandTransfer.seller_id = _seller_id;
+        if(user.userRecordExists(_buyer_id) == true){
+            newLandTransfer.buyer_id = _buyer_id;
         }
         else{
             return false;
         }
-        if(user.userRecordExists(_buyer_id) == true){
-            newLandTransfer.buyer_id = _buyer_id;
+        if(user.userRecordExists(_seller_id) == true){
+            newLandTransfer.seller_id = _seller_id;
         }
         else{
             return false;
