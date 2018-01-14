@@ -7,6 +7,7 @@ import radar
 from random import randint
 import datetime
 from datetime import datetime
+from dateutil.parser import parse
 
 NULL = 'NULL'
 ENABLE_PRINT = 0
@@ -67,6 +68,8 @@ class PIN:
 		self.pin = -1
 		self.date_active = NULL
 		self.date_inactive = NULL
+		self.parents = []
+		self.children = []
 		self.ownership_chain = []
 		self.pin_coordinates = []
 
@@ -77,11 +80,17 @@ num_split = 25
 PIN_NUM = 0
 
 #Get the full list of user ids
+#TODO: Perform file operation only once (i.e. read user ids from "user_info")
 def get_user_ids():
 	with open('userinfo.txt') as json_data:
 		user_ids = [data['sin'] for data in json.load(json_data)['userInfo']]
 	return user_ids
 
+def get_user_info():
+	with open('userinfo.txt') as json_data:
+		user_info = json.load(json_data)['userInfo']
+	return user_info
+	
 #Get all the PIN IDs
 def get_pins(pin_data):
 	pin_list = [data['pin'] for data in pin_data['pinInfo']]
@@ -104,6 +113,14 @@ def get_random_date(begin,end):
 	random_date = radar.random_datetime(start_date, stop_date)
 	return "{:02}/{:02}/{:04}".format(random_date.day, random_date.month, random_date.year)
 
+def get_random_date_between(start_year,end_year):
+	start_date = datetime(year=start_year, month=1, day=1)
+	stop_date = datetime(year=end_year, month=12, day=31)
+
+	random_date = radar.random_datetime(start_date, stop_date)
+	return "{:02}/{:02}/{:04}".format(random_date.day, random_date.month, random_date.year)
+
+	
 def print_transfer_list(transfer_list):
 	for property in transfer_list:
 		if ENABLE_PRINT > 0:
@@ -111,15 +128,27 @@ def print_transfer_list(transfer_list):
 			print("Pin: " + property.pin)
 			print("Date active: " + property.date_active)
 			print("Date inactive: " + property.date_inactive)
-			print("Ownership chain: ")
 			
+			print("Parents: ")
+			for j in property.parents:
+				print(j)
+			
+			print("Children: ")
+			for j in property.children:
+				print(j)
+			
+			print("Ownership chain: ")
 			for j in property.ownership_chain:
 				print(j)
 			
 			print("PIN coordinates: " + str(property.pin_coordinates))
 			print("---------------------------")
 	
-def gen_chain_of_ownership_transfer(user_ids):
+def gen_chain_of_ownership_transfer(user_ids, user_info):
+	
+	#TODO: Have to cap the maximum number of transactions by the difference between the
+	# number of year left until the current year
+	
 	#capped at max number of user ids - Users not allowed to buy land back
 	max_land_transfers = randint(0, len(user_ids))
 	
@@ -133,41 +162,55 @@ def gen_chain_of_ownership_transfer(user_ids):
 		'date_of_transfer'  : NULL,
 	})
 	
+	has_run_once = False
+	
 	for _ in range(max_land_transfers):
 		transfer_user_id = secrets.choice(user_ids)
 		
-		date_active = get_random_date(100,18)
-		date_inactive = NULL
+		#TODO: Make sure that the user that is going to own the land is at least 
+		# 18 years old from the time that the transfer is going to happen
+		if not has_run_once:
+			user_record = next((item for item in user_info if item['sin'] == transfer_user_id))
+			start_year = parse(user_record['birth_date'], fuzzy=True).year
+			date_active = get_random_date_between(start_year,start_year+1)
+			date_inactive = NULL
+			
+			date_of_transfer = date_active
+			
+			has_run_once = True
+		else:
+			start_year += 2
+			date_of_transfer = get_random_date_between(start_year,start_year+1)
 
 		# Add to chain if not already there
 		# TODO: verify check for existence is okay
 		if transfer_user_id not in ownership_chain:
 			ownership_chain.insert(0,({
 				'owner'             : transfer_user_id,
-				'date_of_transfer'  : date_active,
+				'date_of_transfer'  : date_of_transfer,
 			}))
 
 	return ownership_chain, date_active, date_inactive
 
 
 # Generate the list of properties with simple ownership transfer
-def gen_simple_transfer(user_ids, pin):
+def gen_simple_transfer(user_ids, user_info, pin):
 	property = PIN()
 	
 	property.pin = gen_pin_num(pin)
-	property.ownership_chain, property.date_active, property.date_inactive = gen_chain_of_ownership_transfer(user_ids)
+	property.ownership_chain, property.date_active, property.date_inactive = gen_chain_of_ownership_transfer(user_ids,user_info)
 
 	return property
 	
 	
-def gen_regular(num, user_ids):
+def gen_regular(num, user_ids, user_info):
 	transfer_list = []
 
 	begin = PIN_NUM
 	end = PIN_NUM + num_transfer
 	
 	for i in range(begin, end):
-		transfer_list.append(gen_simple_transfer(user_ids,i))
+		transfer_list.append(gen_simple_transfer(user_ids,user_info,i))
 		increment_pin()
 	
 	return transfer_list
@@ -187,25 +230,40 @@ Newly merged PIN
 2) set date active (same day that previous PIN made inactive)
 3) have link to previous PINs
 '''
-def gen_merge_transfer(merge_list,merge_index,merge_pin,user_ids):
+def gen_merge_transfer(merge_list,merge_index,merge_pin,user_ids,user_info):
 	
 	#newly merged PIN's owner
 	new_owner_id = secrets.choice(user_ids)
-	date_inactive = get_random_date(20,5)
+
+	latest_year1 = merge_list[merge_index].ownership_chain[0]['date_of_transfer']
+	latest_year2 = merge_list[merge_index+1].ownership_chain[0]['date_of_transfer']
+	
+	#latest_year should be greater than any of the dates in the ownership chain of either
+	if  latest_year1 == NULL and latest_year2 == NULL:
+		date_inactive = get_random_date_between(1950,2015)
+	elif latest_year1 == NULL:
+		end_year2 = parse(latest_year2, fuzzy=True).year
+		date_inactive = get_random_date_between(end_year2+1, end_year2+2)
+	elif latest_year2 == NULL:
+		end_year1 = parse(latest_year1, fuzzy=True).year
+		date_inactive = get_random_date_between(end_year1+1, end_year1+2)
+	else:
+		end_year1 = parse(latest_year1, fuzzy=True).year
+		end_year2 = parse(latest_year2, fuzzy=True).year
+		latest_year = max(end_year1, end_year2)
+		date_inactive = get_random_date_between(latest_year+1, latest_year+2)
 	
 	#Parents - PINs to be merged
 	merge_list[merge_index].ownership_chain.insert(0,({
 		'owner'             : NULL,
-		'date_of_transfer'  : NULL,
+		'date_of_transfer'  : date_inactive,
 	}))
 	merge_list[merge_index+1].ownership_chain.insert(0,({
 		'owner'             : NULL,
-		'date_of_transfer'  : NULL,
+		'date_of_transfer'  : date_inactive,
 	}))
 	merge_list[merge_index].date_inactive = date_inactive
 	merge_list[merge_index+1].date_inactive = date_inactive
-
-	#3) TODO: Figure out how to do the link
 	
 	#Child - Merged parents
 	mproperty = PIN()
@@ -223,11 +281,18 @@ def gen_merge_transfer(merge_list,merge_index,merge_pin,user_ids):
 	}))
 
 	#TODO: look into making initialization to NULL upon creation since always done
-	#3) Figure out how to do the link
+	
+	#Parents-Child Link
+	merge_list[merge_index].children.append(mproperty.pin);
+	merge_list[merge_index+1].children.append(mproperty.pin);
+	
+	#Child-Parents Link
+	mproperty.parents.append(merge_list[merge_index].pin);
+	mproperty.parents.append(merge_list[merge_index+1].pin);
 	
 	return mproperty
 
-def gen_merge(num, user_ids):
+def gen_merge(num, user_ids,user_info):
 	merge_list = []
 
 	#generate twice as many normal transfer initially
@@ -235,12 +300,12 @@ def gen_merge(num, user_ids):
 	end = PIN_NUM + (num_merge*2)
 
 	for i in range(begin,end):
-		merge_list.append(gen_simple_transfer(user_ids,i))
+		merge_list.append(gen_simple_transfer(user_ids,user_info,i))
 		increment_pin()
 
 	#Merge 2 PINs into 1
 	for i in range(begin,end,2):
-		merge_list.append(gen_merge_transfer(merge_list,i-begin,PIN_NUM,user_ids))
+		merge_list.append(gen_merge_transfer(merge_list,i-begin,PIN_NUM,user_ids,user_info))
 		increment_pin()
 	
 	return merge_list
@@ -262,18 +327,25 @@ Newly split PINs
 3) have link to previous PINs
 '''
 #TODO: Find a method to link split child to the parent
-def gen_split_transfer(split_list,split_index,merge_pin,user_ids):
+def gen_split_transfer(split_list,split_index,merge_pin,user_ids,user_info):
 	#get new owners
 	split1_owner_id = secrets.choice(user_ids)
 	split2_owner_id = secrets.choice(user_ids)
-	date_inactive = get_random_date(20,5)
 	
-	sproperty = []
+	latest_year = split_list[split_index].ownership_chain[0]['date_of_transfer']
 	
+	#date_inactive should be a random date greater than the date of transfer
+	if latest_year == NULL:
+		date_inactive = get_random_date_between(1950,2015)
+	else:
+		#get the date of transfer
+		end_year = parse(latest_year, fuzzy=True).year
+		date_inactive = get_random_date_between(end_year+1,end_year+2)
+
 	#Parent - PIN to be split
 	split_list[split_index].ownership_chain.insert(0,({
 		'owner'             : NULL,
-		'date_of_transfer'  : NULL,
+		'date_of_transfer'  : date_inactive,
 	}))
 	split_list[split_index].date_inactive = date_inactive
 	
@@ -308,24 +380,33 @@ def gen_split_transfer(split_list,split_index,merge_pin,user_ids):
 		'date_of_transfer'  : date_inactive,
 	}))
 
+	#Parent->Children Link
+	split_list[split_index].children.append(sproperty1.pin)
+	split_list[split_index].children.append(sproperty2.pin)
+	
+	#Children->Parent Link
+	sproperty1.parents.append(split_list[split_index].pin);
+	sproperty2.parents.append(split_list[split_index].pin);
+
+	sproperty = []
 	sproperty.append(sproperty1)
 	sproperty.append(sproperty2)
 	
 	return sproperty
 
-def gen_split(num, user_ids):
+def gen_split(num, user_ids,user_info):
 	split_list = []
 
 	begin = PIN_NUM
 	end = PIN_NUM + num_split
 	
 	for i in range(begin,end):
-		split_list.append(gen_simple_transfer(user_ids,i))
+		split_list.append(gen_simple_transfer(user_ids,user_info,i))
 		increment_pin()
 
 	#Split 1 PIN into 2
 	for i in range(begin,end):
-		temp_list = gen_split_transfer(split_list,i-begin,PIN_NUM,user_ids)
+		temp_list = gen_split_transfer(split_list,i-begin,PIN_NUM,user_ids,user_info)
 		split_list.append(temp_list[0])
 		split_list.append(temp_list[1])
 		increment_pin()
@@ -356,6 +437,8 @@ def gen_json(transfer_list,merge_list,split_list):
 			'pin'               : property.pin,
 			'date_active'       : property.date_active,
 			'date_inactive'     : property.date_inactive,
+			'parents'			: property.parents,
+			'children'			: property.children,
 			'ownership_chain'   : property.ownership_chain,
 			'Coordinates'		: property.pin_coordinates,
 		})
@@ -364,8 +447,11 @@ def gen_json(transfer_list,merge_list,split_list):
 		print(json.dumps(pin_data, indent=4))
 	export_pretty_json(pin_data)
 
+
+
 #MAIN
 user_ids = get_user_ids()
+user_info = get_user_info()
 
 '''
 Regular Transfer
@@ -375,7 +461,7 @@ if ENABLE_PRINT > 0:
 	print("Regular List")
 	print("*************\n")
 
-transfer_list = gen_regular(num_transfer, user_ids)
+transfer_list = gen_regular(num_transfer, user_ids, user_info)
 print_transfer_list(transfer_list)
 
 '''
@@ -386,7 +472,7 @@ if ENABLE_PRINT > 0:
 	print("Merge List")
 	print("*************\n")
 
-merge_list = gen_merge(num_merge, user_ids)
+merge_list = gen_merge(num_merge, user_ids, user_info)
 print_transfer_list(merge_list)
 
 '''
@@ -397,7 +483,7 @@ if ENABLE_PRINT > 0:
 	print("Split List")
 	print("*************\n")
 
-split_list = gen_split(num_split, user_ids)
+split_list = gen_split(num_split, user_ids, user_info)
 print_transfer_list(split_list)
 
 if ENABLE_PRINT > 0:
