@@ -45,6 +45,30 @@ contract TestLandTransfers {
 		Assert.equal(uint(buyer_id), uint(expected_buyer_id), "buyer_id not as expected");
 		Assert.equal(uint(seller_id), uint(expected_seller_id), "seller_id not as expected");
 	}
+
+	function test_successful_land_request_creation() public {
+	
+		bool expected_result = true;
+		bool returnedResult1 = user.createUserRecord('user1', 'user1', 1, '1/1/18');
+		Assert.equal(returnedResult1, expected_result, "user1 not created.");
+		
+		bool returnedResult2 = user.createUserRecord('user2', 'user2', 2, '1/1/18');
+		Assert.equal(returnedResult2, expected_result, "user2 not created.");
+
+		address user_address = user.returnContractAddress();
+		bool landresult = land_transfers.createLandTransfer(user_address, 100000, 1, 2);
+		Assert.equal(landresult, expected_result, "Land transfer from user1 to user2 not completed");
+	}
+	
+	
+	function test_failed_land_request_creation() public {
+		
+		bool expected_result = false;
+		address user_address = user.returnContractAddress();
+		bool landresult = land_transfers.createLandTransfer(user_address, 200000, 3, 4);
+		Assert.equal(landresult, expected_result, "Land transfer should not have completed because users don't exist");
+
+	}
 	
 	function testGetPIN_fromIndex() public {
 
