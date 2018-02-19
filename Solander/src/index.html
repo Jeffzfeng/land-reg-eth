@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Solander</title>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-  <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' type='text/css'>
+  <link href='css/bootstrap.min.css' rel='stylesheet' type='text/css'>
 </head>
 <body class="container">
   <h1></h1>
@@ -12,27 +15,27 @@
       <thead>
         <tr>
           <th>user ID</th></th>
-          <th></th>
-          <th></th>
-          <th></th>
+          <th>first name</th>
+          <th>last name</th>
+          <th>birthdate</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td></td>
           <td id="candidate-1"></td>          
           <td></td>
           <td></td>
+          <td></td>
         </tr>
         <tr>
-          <td></td>
           <td id="candidate-2"></td>
           <td></td>
           <td></td>
+          <td></td>
         </tr>
         <tr>
-          <td></td>
           <td id="candidate-3"></td>
+          <td></td>
           <td></td>
           <td></td>
         </tr>
@@ -40,9 +43,11 @@
     </table>
   </div>
   <input type="text" id="candidate" />
-  <a href="#" onclick="voteForCandidate()" class="btn btn-primary">Vote</a>
+  <a href="#" class="btn btn-primary">Sign up</a>
 </body>
-<script src="https://cdn.rawgit.com/ethereum/web3.js/develop/dist/web3.js"></script>
 <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>
+<script src="javascript/bootstrap.min.js"></script>
+<script src="javascript/web3.min.js"></script>
+<script src="javascript/truffle-contract.js"></script>
 <script src="javascript/app.js"></script>
 </html>
