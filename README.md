@@ -1,8 +1,8 @@
 # SOLANDER README
 last updated: 2018/02/20 by: Jeff
-1. included new table of contents
-2. added instructions on how to use start local frontend "section 4"
-3. added FAQ or just common problems that I encountered "section 5"
+- included new table of contents
+- added instructions on how to use start local frontend "section 4"
+- added FAQ or just common problems that I encountered "section 5"
 
 ## Development Guide Table of Contents
 1. environment setup
@@ -23,6 +23,8 @@ last updated: 2018/02/20 by: Jeff
     - version 4.x.x or higher recommended
 3. 'npm install' 
     - this will install all node dependancies in folder 
+4. for using using smart contracts in your browser, metamask is needed.
+    - install here: https://metamask.io/ 
 
 ### 2) Running Truffle
 1. `truffle compile`
@@ -66,7 +68,36 @@ last updated: 2018/02/20 by: Jeff
     - example of cmd line interaction code can be found in 
 
 ### 4) How to deploy frontend on a local web browser
-    
+- Below are steps to deploy frontend onto your local web browser
+- The react-box is used as the underpinning boilerplate code;
+- as it provided a useable template to write modular code that reacts to new smart contract transactions as changes of state
+    - make sure the environment is properly setup, if there are any issues, please refer back to section 1 or 5
+- 1) setting up meta mask
+    - a little fox icon should be on the top navbar of your browser
+    - click on "restore from seed phrase"
+    - run "truffle develop" in cmd line
+        - use the mneonic provided as wallet seed: candy maple cake sugar pudding cream honey rich smooth crumble sweet treat in metamask
+        - set a password to anything you would like
+        - click on "private network" in the top left corner
+        - go to custom RPC, and use "http://127.0.0.1:9545" as network
+        - open "private network" again and choose this newly added network
+    - if done correctly, you should now see that you have ~99 ETH
+- 2) deploy contracts onto blockchain
+    - run "compile" and "migrate" as usual. *note: if you are running inside truffle develop you don't need the "truffle" keyword
+- 3) deploy frontend to localhost
+    - run "truffle run start", this runs the file "script/start"
+    - if done correctly, you should see the web page and a popup with a new transaction request from metamask.
+- 4) frontend testing
+    - there is template for "Jest" added to test react code, but only has 1 test so far
+    - run "npm run test" to run this script
+
+### 5) FAQ
+- Below are some common issues encountered
+    - Metamask issues:
+        - Q: Nothing is popping up!
+            - A: most likely ports are not configured correctly, make sure that is sufficient ETH to complete transaction
+        - Q: Transaction failed! incorrect nonce.
+            - make sure to press reset at the bottom of custom RPC page, currently the network does not reset itself even when shutdown
 
 ## Extra resources
 - Read through for extra reference at truffle framework official site:
