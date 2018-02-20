@@ -1,26 +1,28 @@
 # SOLANDER README
 last updated: 2018/02/20 by: Jeff
-+ included new table of contents
-+ added instructions on how to use start local frontend "section 4"
-+ added FAQ or just common problems that I encountered "section 5"
+1. included new table of contents
+2. added instructions on how to use start local frontend "section 4"
+3. added FAQ or just common problems that I encountered "section 5"
 
 ## Development Guide Table of Contents
-1) environment setup
-2) running truffle
+1. environment setup
+2. running truffle
     - for development purposes only
     - tl:dr of steps:
-        1) compile (if changes were made) 
-        2) start up a test environment (either truffle develop or testrpc)
-        3) migrate 
-        4) test (either truffle test or manual testing)
-3) additional notes on manual testing
-4) frotend deployment on a local web server
-5) FAQ
+        - compile (if changes were made) 
+        - start up a test environment (either truffle develop or testrpc)
+        - migrate 
+        - test (either truffle test or manual testing)
+3. additional notes on manual testing
+4. frotend deployment on a local web server
+5. FAQ
 
 ### 1) Environment Setup
-1. Create a VirtualBox VM using Ubuntu 16.04 LTS
-2. `npm install -g truffle` //version 4.x.x or higher recommended
-3. 'npm install' // this will install all node dependancies in folder 
+    - Create a VirtualBox VM using Ubuntu 16.04 LTS
+2. `npm install -g truffle`
+    - version 4.x.x or higher recommended
+3. 'npm install' 
+    - this will install all node dependancies in folder 
 
 ### 2) Running Truffle
 1. `truffle compile`
