@@ -7,6 +7,8 @@ import './css/open-sans.css'
 import './css/pure-min.css'
 import './App.css'
 import Signup from './Signup'
+import LandTransferTable from './LandTransferTable'
+import UserTable from './UserTable'
 
 class App extends Component {
   constructor(props) {
@@ -70,6 +72,7 @@ class App extends Component {
     })
   }
 
+
   render() {
     return (
       <div className="App">
@@ -86,14 +89,12 @@ class App extends Component {
               <p>If your contracts compiled and migrated successfully, and you accept the transaction on the metamask plugin below; the stored value should be <strong>Jeff Feng (default)</strong></p>
               <p>Try changing the value stored on <strong>line 59</strong> of App.js.</p>
               <h3>Stored value: {this.state.storageValue}</h3>
-              <h2>Change stored value below</h2>
-                <ul>
-                 <li onClick={() => {this.setStorageValue('Girija K')}}>Girija K</li>
-                 <li onClick={() => {this.setStorageValue('Perb WOONNNG')}}>Perb WOONNNG</li>
-                 <li onClick={() => {this.setStorageValue('Prasoon J')}}>Prasoon J</li>
-                 <li onClick={() => {this.setStorageValue('Jeff Feng')}}>Jeff Feng</li>
-              </ul>
-             <Signup />
+
+              <h1>Demo of how land transfer will work</h1>
+              <p>Below is list of land that is available for a transfer request</p>
+              <p>click on a name below, and choose the property to queue a request!</p>
+              <LandTransferTable/>
+              <UserTable/>
             </div>
           </div>
         </main>
