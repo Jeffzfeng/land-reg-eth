@@ -2,42 +2,88 @@ import React, { Component } from 'react'
 
 //import App from "./App"
 
-export default class LandTransferTable extends Component {
+  const land_header_list = ["Property ID", "Address", "Market Price", "Owned By"];
+  const land_body = { 
+    "1" : { 
+      "PID" : "1",
+      "address" : "elm st",
+      "market_price" : "40 M",
+      "owned_by" : "N/A"
+    }, 
+        "2" : { 
+      "PID" : "2",
+      "address" : "fern st",
+      "market_price" : "40 M",
+      "owned_by" : "N/A"
+    },
+        "3" : { 
+      "PID" : "3",
+      "address" : "fern st",
+      "market_price" : "40 M",
+      "owned_by" : "N/A"
+    },
+       "4" : { 
+      "PID" : "4",
+      "address" : "fern st",
+      "market_price" : "40 M",
+      "owned_by" : "N/A"
+    },
+       "5" : { 
+      "PID" : "5",
+      "address" : "fern st",
+      "market_price" : "40 M",
+      "owned_by" : "N/A"
+    }
+  }
 
+function LandElement(props) {
+
+  if(props.type === "header"){
+    const land_header = land_header_list.map((item) => 
+      <th key={item}>{item}</th>
+    );
+
+    return (
+      <thead>
+        <tr>
+          {land_header}
+        </tr>
+      </thead>
+    );
+  }
+
+  else if(props.type === "body"){
+    const land_body_row = Object.keys(land_body).map((PID_key) => {
+      return ( 
+      <tr key={PID_key}>
+        {
+          Object.keys(land_body[PID_key]).map(column => {
+            return (
+            <td key={land_body[PID_key][column]}>
+              {land_body[PID_key][column]}
+            </td>
+            );
+          })
+        }  
+      </tr>
+      );
+    })
+    return (
+      <tbody>
+        {land_body_row}
+      </tbody>
+    );
+  }  
+}
+export default class LandTransferTable extends Component {
 
 	render() {
 		return (
             <div id="LandTransferTable">
               <h2>List of land available to be transferred</h2>
               <table>
-                 <thead>
-                  <tr>
-                    <th>Property ID</th>
-                    <th>Address</th>
-                    <th>Market Price</th>
-                    <th>Owned By</th>
-                  </tr>
-                 </thead>
-                 <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>13 Elm St.</td>
-                    <td>40 M</td>
-                    <td>Govt. Of Can.</td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>1101 Bay St.</td>
-                    <td>3 M</td>
-                    <td>Govt. Of Can. </td>
-                  </tr>
-                  <tr>
-                    <td>3</td>
-                    <td>2 Parliament St.</td>
-                    <td>10 M</td>
-                    <td>Govt. Of Can.</td>
-                  </tr>
-                </tbody>
+                <LandElement type="header" />
+                <LandElement type="body" />  
               </table>
               <br/>
             </div>

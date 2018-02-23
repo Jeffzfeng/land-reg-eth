@@ -6,7 +6,7 @@ import './css/oswald.css'
 import './css/open-sans.css'
 import './css/pure-min.css'
 import './App.css'
-import Signup from './Signup'
+//import Signup from './Signup'
 import LandTransferTable from './LandTransferTable'
 import UserTable from './UserTable'
 

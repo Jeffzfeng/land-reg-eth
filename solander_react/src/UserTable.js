@@ -1,14 +1,17 @@
 import React, { Component } from 'react'
 
-	function requestOptions(props) {
+	function RequestOptions(props) {
 	  if (!props.name) {
 	   return null;
 	  }
 
 	  return (
-	    <div>
-	      Warning!
-	    </div>
+	      <tr>
+	          <td><button>PID 1</button></td>
+	          <td><button>PID 2</button></td>
+	          <td><button>PID 3</button></td>
+	      </tr>
+
 	  );
 	}
 
@@ -55,18 +58,15 @@ export default class UserTable extends Component {
 		    				</ul>
 		                  </td>
 		                </tr>
-	                	{this.state.requestCreated ? (
-	                	  <tr>
-			                  <td><button>PID 1</button></td>
-			                  <td><button>PID 2</button></td>
-			                  <td><button>PID 3</button></td>
-			              </tr>
-					      ) : (
-					        null
-					     )}
+		                <RequestOptions name={this.state.requestCreated} />
 		             </tbody>
 	              </table>	
 	            </div>
          );
 	}
 }
+          //       	{this.state.requestCreated ? (
+
+					     //  ) : (
+					     //    null
+					     // )}
