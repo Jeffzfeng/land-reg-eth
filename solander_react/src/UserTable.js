@@ -22,7 +22,7 @@ export default class UserTable extends Component {
 		this.handleUserRequest = this.handleUserRequest.bind(this)
 
 	}
-
+	
 	handleUserRequest() {
 		this.setState(prevState => ({
 			requestCreated: !prevState.requestCreated
