@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import SimpleStorageContract from '../build/contracts/SimpleStorage.json'
 import LandTransferContract from '../build/contracts/LandTransfers.json'
+import UsersContract from '../build/contracts/Users.json'
+
 import getWeb3 from './utils/getWeb3'
 
 import './css/oswald.css'
@@ -91,12 +93,52 @@ class App extends Component {
     this.landTransfer = this.contract(LandTransferContract)
     this.landTransfer.setProvider(this.state.web3.currentProvider)
     //return this.setStorageValue('Jeff Feng')
-    return this.createLandTransferHashmap()
+    //return this.createLandTransferHashmap()
+
+    //Users
+    this.Users = this.contract(UsersContract)
+    this.Users.setProvider(this.state.web3.currentProvider)
+    return this.loadUsers()
   }
     // Declaring this for later so we can chain functions on SimpleStorage.
-    
+  loadUsers(){
+      var userInstance
+
+      //Get accounts
+      this.state.web3.eth.getAccounts((error, accounts) => {
+          this.simpleStorage.deployed().then((instance) => {
+              simpleStorageInstance = instance
+
+              // Stores a given value, 5 by default.
+              return simpleStorageInstance.setString(this.state.web3.fromAscii(name), {from: accounts[0]})
+          }).then((result) => {
+              // Get the value from the contract to prove it worked.
+              return simpleStorageInstance.getString.call(accounts[0])
+          }).then((result) => {
+              // Update state with the result.
+              return this.setState({ storageValue: this.state.web3.toAscii(result) })
+          })
+      })
+
+
+
+  }
   setStorageValue(name) {
     var simpleStorageInstance
+      this.state.web3.eth.getAccounts((error, accounts) => {
+          this.simpleStorage.deployed().then((instance) => {
+              simpleStorageInstance = instance
+
+              // Stores a given value, 5 by default.
+              return simpleStorageInstance.setString(this.state.web3.fromAscii(name), {from: accounts[0]})
+          }).then((result) => {
+              // Get the value from the contract to prove it worked.
+              return simpleStorageInstance.getString.call(accounts[0])
+          }).then((result) => {
+              // Update state with the result.
+              return this.setState({ storageValue: this.state.web3.toAscii(result) })
+          })
+      })
 
     // Get accounts.
     this.state.web3.eth.getAccounts((error, accounts) => {
