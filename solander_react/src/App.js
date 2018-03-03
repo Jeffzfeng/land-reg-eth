@@ -98,25 +98,43 @@ class App extends Component {
     //Users
     this.Users = this.contract(UsersContract)
     this.Users.setProvider(this.state.web3.currentProvider)
-    return this.loadUsers()
+    return this.loadUsers('Girija', 'Khandekar', '08/08/2018', 123)
   }
     // Declaring this for later so we can chain functions on SimpleStorage.
-  loadUsers(){
-      var userInstance
+  loadUsers(firstName, lastName, birthDate, userID ){
+      var usersInstance
 
       //Get accounts
       this.state.web3.eth.getAccounts((error, accounts) => {
-          this.simpleStorage.deployed().then((instance) => {
-              simpleStorageInstance = instance
+          this.Users.deployed().then((instance) => {
+              usersInstance = instance
 
               // Stores a given value, 5 by default.
-              return simpleStorageInstance.setString(this.state.web3.fromAscii(name), {from: accounts[0]})
+              //return usersInstance.setString(this.state.web3.fromAscii(name), {from: accounts[0]})
+              return usersInstance.create_user_record(
+                  this.state.web3.fromAscii(firstName),
+                  this.state.web3.fromAscii(lastName),
+                  123,
+                  this.state.web3.fromAscii(birthDate),
+                  {from: accounts[0]})
+
           }).then((result) => {
               // Get the value from the contract to prove it worked.
-              return simpleStorageInstance.getString.call(accounts[0])
+              console.log(result)
+              //var userRecord =
+              return usersInstance.get_user_record(123)//all(accounts[0])
+              //return userRecord
+              //return usersInstance.getString.call(accounts[0])
+
           }).then((result) => {
-              // Update state with the result.
-              return this.setState({ storageValue: this.state.web3.toAscii(result) })
+              console.log(result)
+              console.log(result[0])
+              console.log(result[1])
+              console.log(this.state.web3.toAscii(result[0]))
+              console.log(this.state.web3.toAscii(result[1]))
+
+      // Update state with the result.
+              //return this.setState({ storageValue: this.state.web3.toAscii(result) })
           })
       })
 

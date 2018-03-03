@@ -31,4 +31,8 @@ contract Users {
         var userRecord = userRecords[_userID];
         return (userRecord.firstName, userRecord.lastName, userRecord.birthDate);
     }
+/*    function test_get_user_record (uint32 _userID) public view returns (bytes32) {
+        var userRecord = userRecords[_userID];
+        return userRecord.firstName;
+    }*/
 }
