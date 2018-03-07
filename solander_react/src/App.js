@@ -13,6 +13,7 @@ import './App.css'
 import LandTransferTable from './LandTransferTable'
 import UserTable from './UserTable'
 import Login from './Login'
+import Register from './Register'
 
   const land_transfer_hash = { 
     "1" : { 
@@ -248,6 +249,7 @@ class App extends Component {
               <p>Number of registered land: {this.state.totalLandTransfer}</p>
               <UserTable />
               <Login />
+              <Register/>
             </div>
           </div>
         </main>
