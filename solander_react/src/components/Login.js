@@ -24,7 +24,7 @@ export default class Login extends Component{
   }
 
   handleLogin(event) {
-  	if(this.state.username==null || this.state.username==''){
+  	if(this.state.username==null || this.state.username===''){
   		alert('login unsuccessful, please check input values')
   		event.preventDefault();
   	}
