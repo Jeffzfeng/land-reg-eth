@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Home from "./Home"
+import Router from './Router'
 
 export default class Body extends Component {
   constructor(props) {
@@ -9,7 +10,6 @@ export default class Body extends Component {
   render() {
     return (
         <div className="Body">
-          <Home/ >
         </div>
     );
   }

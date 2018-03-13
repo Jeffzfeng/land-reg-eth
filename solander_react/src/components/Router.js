@@ -1,4 +1,25 @@
 import React, { Component } from 'react'
-import { BrowserRouter, Link, Route } from 'react-router-dom'
+import { BrowserRouter, Link, Route, Switch } from 'react-router-dom'
 
-export default class Login extends Component{d
+import Home from './Home'
+import Login from './Login'
+import Register from './Register'
+
+// The Main component renders one of the three provided
+// Routes (provided that one matches). Both the /roster
+// and /schedule routes will match any pathname that starts
+// with /roster or /schedule. The / route will only match
+// when the pathname is exactly the string "/"
+
+export default class Router extends Component{
+
+render() {
+    return (
+            <Switch>
+              <Route exact path='/' component={Home}/>
+              <Route path='/login' component={Login}/>
+              <Route path='/register' component={Register}/>
+            </Switch>
+        );
+    }   
+}

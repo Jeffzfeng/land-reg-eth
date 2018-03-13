@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { BrowserRouter, Link } from 'react-router-dom'
-import Login from "./Login"
 
 import '../css/oswald.css'
 import '../css/open-sans.css'
@@ -19,6 +18,7 @@ export default class Header extends Component {
                     <ul>        
                         <li><Link to='/'>Home</Link></li>
                         <li><Link to='/login'>Login</Link></li>
+                        <li><Link to='/register'>Register</Link></li>
                     </ul>
             </nav>
     );
