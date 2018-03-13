@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { BrowserRouter, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 import '../css/oswald.css'
 import '../css/open-sans.css'
@@ -7,9 +7,6 @@ import '../css/pure-min.css'
 import '../App.css'
 
 export default class Header extends Component {
-  constructor(props) {
-    super(props)
-  }
 
   render() {
     return (

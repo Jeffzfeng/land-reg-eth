@@ -2,21 +2,29 @@ import React, { Component } from 'react'
 
 export default class Register extends Component
 {
+    
+    
     constructor(props)
     {
         super(props);
         this.state = {
             firstName: '',
             lastName: '',
-            birthDate: ''
+            birthDate: '',
+            sinID: 0
         };
 
         this.handleChangeFirstName = this.handleChangeFirstName.bind(this);
         this.handleChangeLastName = this.handleChangeLastName.bind(this);
         this.handleChangeBirthDate = this.handleChangeBirthDate.bind(this);
+        this.handleChangeSinID = this.handleChangeSinID.bind(this);
         this.handleRegister = this.handleRegister.bind(this);
+        
     }
-
+    handleChangeSinID(event)
+    {
+        this.setState({sinID: event.target.value});
+    }
     handleChangeFirstName(event)
     {
         this.setState({firstName: event.target.value});
@@ -46,7 +54,12 @@ export default class Register extends Component
             event.preventDefault(); //what does it do?
         }
         else{
-
+            
+            //int_num_id++;
+            //console.log(int_num_id);
+            //instantiate the contract
+            
+            console.log(this.state.sinID);
             alert('user createdddd');
         }
     }
