@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { BrowserRouter, Link, Route } from 'react-router-dom'
 
 export default class Login extends Component{
 
@@ -36,19 +37,19 @@ export default class Login extends Component{
 
   render() {
     return (
-      <form onSubmit={this.handleLogin}>
-        <label>
-          username:
-          <input type="text" value={this.state.username} onChange={this.handleChangeUsername} />
-        </label>
-        <br /><br />
-        <label>
-          password:
-          <input type="text" value={this.state.password} onChange={this.handleChangePassword} />
-        </label>
-        <br /><br />
-        <input type="submit" value="Login" />
-      </form>
+        <form onSubmit={this.handleLogin}>
+          <label>
+            username:
+            <input type="text" value={this.state.username} onChange={this.handleChangeUsername} />
+          </label>
+          <br /><br />
+          <label>
+            password:
+            <input type="text" value={this.state.password} onChange={this.handleChangePassword} />
+          </label>
+          <br /><br />
+          <input type="submit" value="Login" />
+        </form>
     );
   }
 }
