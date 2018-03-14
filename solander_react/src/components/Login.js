@@ -36,18 +36,17 @@ export default class Login extends Component{
 
   render() {
     return (
-        <form onSubmit={this.handleLogin}>
+        <form onSubmit={this.handleLogin} className="form pure-form pure-form-alligned">
+          <h2>Login</h2>
           <label>
-            username:
-            <input type="text" value={this.state.username} onChange={this.handleChangeUsername} />
+            <input placeholder="username" type="text" value={this.state.username} onChange={this.handleChangeUsername} />
           </label>
           <br /><br />
           <label>
-            password:
-            <input type="text" value={this.state.password} onChange={this.handleChangePassword} />
+            <input placeholder="password" type="text" value={this.state.password} onChange={this.handleChangePassword} />
           </label>
           <br /><br />
-          <input type="submit" value="Login" />
+          <input type="submit" value="Login" className="pure-button pure-button-primary" />
         </form>
     );
   }
