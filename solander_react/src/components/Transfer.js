@@ -13,7 +13,11 @@ export default class Transfer extends Component
             landTransfer: null,
             contract: null,
             web3: null,
-            SellerID: '',
+            sellerID: '',
+            buyerID: '',
+            salePrice: '',
+            landPIN: '',
+            ethAddr: '',
             PIN: '',
             EthForTransfer: ''
         };
@@ -46,31 +50,50 @@ export default class Transfer extends Component
     }
 
     handleChangeSellerID(event) {
-        this.setState({SellerID: event.target.value});
+        this.setState({sellerID: event.target.value});
     }
 
-    handleChangePIN(event) {
-        this.setState({PIN: event.target.value});
+    handleChangeBuyerID(event) {
+        this.setState({buyerID: event.target.value});
     }
 
-    handleChangeAmount(event) {
-        this.setState({EthForTransfer: event.target.value});
+    handleChangeLandPIN(event) {
+        this.setState({landPIN: event.target.value});
     }
+
+    handleChangeEthAddr(event) {
+        this.setState({ethAddr: event.target.value});
+    }
+
+    handleChangeSalePrice(event){
+        this.setState({salePrice: event.target.value});
+    }
+
 
     handleTransfer(event){
 
-        if(this.state.SellerID == null || this.state.firstName === ''){
+        if(this.state.sellerID == null || this.state.sellerID === ''){
             alert('missing seller ID');
             event.preventDefault(); //what does it do?
         }
 
-        else if(this.state.PIN == null || this.state.lastName === ''){
-            alert('missing PIN');
+        else if(this.state.buyerID == null || this.state.buyerID === ''){
+            alert('missing buyerID');
             event.preventDefault(); //what does it do?
         }
 
-        else if(this.state.EthForTransfer == null || this.state.birthDate === ''){
-            alert('missing ether amount to transfer');
+        else if(this.state.ethAddr == null || this.state.ethAddr === ''){
+            alert('missing ethereum address');
+            event.preventDefault(); //what does it do?
+        }
+
+        else if(this.state.salePrice ==null || this.state.salePrice == ''){
+            alert('mising sale price');
+            event.preventDefault();
+        }
+
+        else if(this.state.landPIN == null || this.state.landPIN === ''){
+            alert('missing PIN');
             event.preventDefault(); //what does it do?
         }
 
@@ -112,15 +135,26 @@ export default class Transfer extends Component
             <form onSubmit={this.handleRegister} className="form pure-form pure-form-alligned">
                 <h2>Create New Land Transfer</h2>
                 <label>
-                    <input type="text" placeholder="Seller ID" value={this.state.firstName} onChange={this.handleChangeFirstName} />
+                    <input type="text" placeholder="Seller ID" value={this.state.sellerID} onChange={this.handleChangeSellerID} />
                 </label>
                 <br /><br />
                 <label>
-                    <input type="text" placeholder="PIN" value={this.state.lastName} onChange={this.handleChangeLastName} />
+                    <input type="text" placeholder="Buyer ID" value={this.state.buyerID} onChange={this.handleChangeBuyerID} />
                 </label>
                 <br /><br />
+
                 <label>
-                    <input type="text" placeholder="Eth Amount" value={this.state.birthDate} onChange={this.handleChangeBirthDate} />
+                    <input type="text" placeholder="Selling Price" value={this.state.salePrice} onChange={this.handleChangeSalePrice} />
+                </label>
+                <br /><br />
+
+                <label>
+                    <input type="text" placeholder="landPIN" value={this.state.landPIN} onChange={this.handleChangeLandPIN} />
+                </label>
+                <br /><br />
+
+                <label>
+                    <input type="text" placeholder="Seller Ethereum Address" value={this.state.ethAddr} onChange={this.handleChangeEthAddr} />
                 </label>
                 <br /><br />
                 <input type="submit" value="Submit" className="pure-button pure-button-primary"/>

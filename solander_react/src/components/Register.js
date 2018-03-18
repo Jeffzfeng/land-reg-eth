@@ -131,6 +131,7 @@ export default class Register extends Component
                     <input type="text" placeholder="brithdate e.g. MM/DD/YYYY" value={this.state.birthDate} onChange={this.handleChangeBirthDate} />
                 </label>
                 <br /><br />
+
                 <input type="submit" value="Register" className="pure-button pure-button-primary"/>
             </form>
         );
