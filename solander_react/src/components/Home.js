@@ -37,7 +37,7 @@ export default class Home extends Component {
       })
 
       // Instantiate contract once web3 provided.
-      this.instantiateContract()
+      //this.instantiateContract()
     })
     .catch(() => {
       console.log('Error finding web3.')

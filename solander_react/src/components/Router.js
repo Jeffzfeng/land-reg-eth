@@ -17,10 +17,8 @@ render() {
     return (
             <Switch>
               <Route exact path='/' component={Home}/>
-              <div className="form pure-form">
                 <Route path='/login' component={Login}/>
                 <Route path='/register' component={Register}/>
-              </div>
             </Switch>
         );
     }   

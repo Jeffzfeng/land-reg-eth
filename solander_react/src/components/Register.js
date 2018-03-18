@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import UsersContract from '../../build/contracts/Users.json'
+import getWeb3 from '../utils/getWeb3'
 
 export default class Register extends Component
 {
@@ -8,80 +10,127 @@ export default class Register extends Component
     {
         super(props);
         this.state = {
+            user: null,
+            contract: null,
             firstName: '',
             lastName: '',
             birthDate: '',
-            sinID: 0
+            web3: null
         };
 
         this.handleChangeFirstName = this.handleChangeFirstName.bind(this);
         this.handleChangeLastName = this.handleChangeLastName.bind(this);
         this.handleChangeBirthDate = this.handleChangeBirthDate.bind(this);
-        this.handleChangeSinID = this.handleChangeSinID.bind(this);
         this.handleRegister = this.handleRegister.bind(this);
+        this.handleCreateUser = this.handleCreateUser.bind(this)
         
     }
-    handleChangeSinID(event)
-    {
-        this.setState({sinID: event.target.value});
+
+    componentWillMount() {
+        
+        getWeb3
+        .then(results => {
+          this.setState({
+            web3: results.web3
+          })
+
+          // Instantiate contract once web3 provided.
+          this.instantiateContract()
+        })
+        .catch(() => {
+          console.log('Error finding web3. or contract instantiation failed')
+        })
     }
-    handleChangeFirstName(event)
-    {
+
+    instantiateContract() {
+        // initiating contract for register page
+        this.setState({contract: require('truffle-contract')})
+        this.setState({user: this.state.contract(UsersContract)})
+        this.state.user.setProvider(this.state.web3.currentProvider)
+        console.log('User contract called by Register component')
+        console.log("state of user contract: ", this.state.user)
+    }
+
+    handleChangeFirstName(event) {
         this.setState({firstName: event.target.value});
     }
 
-    handleChangeLastName(event)
-    {
+    handleChangeLastName(event) {
         this.setState({lastName: event.target.value});
     }
 
-    handleChangeBirthDate(event)
-    {
+    handleChangeBirthDate(event) {
         this.setState({birthDate: event.target.value});
     }
 
     handleRegister(event){
+
         if(this.state.firstName == null || this.state.firstName === ''){
             alert('missing first name');
             event.preventDefault(); //what does it do?
         }
+
         else if(this.state.lastName == null || this.state.lastName === ''){
-            alert('missing lastName name');
+            alert('missing last name name');
             event.preventDefault(); //what does it do?
         }
+
         else if(this.state.birthDate == null || this.state.birthDate === ''){
             alert('missing birth date name');
             event.preventDefault(); //what does it do?
         }
+
         else{
-            
-            //int_num_id++;
-            //console.log(int_num_id);
-            //instantiate the contract
-            
-            console.log(this.state.sinID);
-            alert('user createdddd');
-        }
+            event.preventDefault()
+            console.log(this.state)
+            this.handleCreateUser()
+            //.then(() => console.log("handle user creation")
+         }
+    }
+
+    handleCreateUser() {
+        var userInstance
+
+        // add error checking later
+
+        this.state.web3.eth.getAccounts((error, accounts) => {
+            this.state.user.deployed().then((instance) => {
+            userInstance = instance
+            console.log("accounts avaialable: ",accounts)
+            console.log("in handleCreateUser")
+            return userInstance.create_user_record(
+                this.state.web3.fromAscii(this.state.firstName),
+                this.state.web3.fromAscii(this.state.lastName),
+                1,
+                this.state.web3.fromAscii(this.state.birthDate), 
+                {from: accounts[0]}
+            )
+          }).then((result) => {
+            console.log(result)
+             alert("User Created!")
+            console.log("User added to the blockchain")
+            this.setState({sinID: this.state.sinID + 1})
+           })
+        })
     }
 
     render(){
         return (
-            <form onSubmit={this.handleRegister}>
+            <form onSubmit={this.handleRegister} className="form pure-form pure-form-alligned">
+                <h2>Register</h2>
                 <label>
-                    first name:
-                    <input type="text" value={this.state.firstName} onChange={this.handleChangeFirstName} />
+                    <input type="text" placeholder="firstname" value={this.state.firstName} onChange={this.handleChangeFirstName} />
                 </label>
                 <br /><br />
                 <label>
-                    last name:
-                    <input type="text" value={this.state.lastName} onChange={this.handleChangeLastName} />
-                </label>
-                <label>
-                    birth date:
-                    <input type="text" value={this.state.birthDate} onChange={this.handleChangeBirthDate} />
+                    <input type="text" placeholder="lastname" value={this.state.lastName} onChange={this.handleChangeLastName} />
                 </label>
                 <br /><br />
-                <input type="submit" value="Register" />
+                <label>
+                    <input type="text" placeholder="brithdate e.g. MM/DD/YYYY" value={this.state.birthDate} onChange={this.handleChangeBirthDate} />
+                </label>
+                <br /><br />
+                <input type="submit" value="Register" className="pure-button pure-button-primary"/>
             </form>
         );
     }
