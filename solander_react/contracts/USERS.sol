@@ -47,12 +47,13 @@ contract USERS {
     // mul = master_user_list
     //      (each user needs a unique ID)
     mapping(uint32 => UserRecord) mul;
+    mapping(address => uint32) eth_addr_to_uid;
+
     uint32[] user_id_list;
 
     function create_user_record (uint32 user_id, bytes32 _fn, bytes32 _bd, address _ea, uint32 _li) public {
 
         require(!user_record_exists(user_id));
-
         mul[user_id] = UserRecord({
 
             init: true,
@@ -64,9 +65,18 @@ contract USERS {
             lawyer_id: _li
         });
 
+        eth_addr_to_uid[_ea] = user_id;
         user_id_list.push(user_id);
     }
+
+    function get_user_id_from_eth_addr (address _ea) public view returns (uint32) {    
+        return eth_addr_to_uid[_ea];
+    }
     
+    function get_user_list_length () public view returns (uint256) {
+        return user_id_list.length;
+    }
+
     function get_user_record_from_user_id (uint32 user_id) public view returns (UserRecord) {
         return mul[user_id];
     }
