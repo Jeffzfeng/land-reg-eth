@@ -10,7 +10,7 @@ export default class Header extends Component {
 
   render() {
     return (
-        <div classnName="header">
+        <div className="header">
             <nav className="navbar pure-menu pure-menu-horizontal">
                 <a href="#" className="pure-menu-heading pure-menu-link">Solander: A Blockchain Land Registry</a>
                     <ul>        
