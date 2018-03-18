@@ -4,7 +4,9 @@ export default class Profile extends Component {
 
   render() {
     return (
-   		<p>Welcome Back</p>
+    	<div className="profile">
+   			<h2>Welcome Back</h2>
+ 		</div>
     );
   }
 }

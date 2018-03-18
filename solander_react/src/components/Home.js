@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import SimpleStorageContract from '../../build/contracts/SimpleStorage.json'
-import LandTransferContract from '../../build/contracts/LandTransfers.json'
+//import LandTransferContract from '../../build/contracts/LandTransfers.json'
 import UsersContract from '../../build/contracts/Users.json'
 
 
@@ -57,8 +57,8 @@ export default class Home extends Component {
     this.simpleStorage.setProvider(this.state.web3.currentProvider)
   
     // LAND TRANSFER
-    this.landTransfer = this.contract(LandTransferContract)
-    this.landTransfer.setProvider(this.state.web3.currentProvider)
+    //this.landTransfer = this.contract(LandTransferContract)
+    //this.landTransfer.setProvider(this.state.web3.currentProvider)
     //return this.setStorageValue('Jeff Feng')
     //return this.createLandTransferHashmap()
 

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Route, Switch } from 'react-router-dom'
 
 import Home from './Home'
-import Login from './Login'
+//import Login from './Login'
 import Register from './Register'
 import Transfer from './Transfer'
 import Profile from './Profile'
@@ -20,10 +20,9 @@ render() {
     return (
             <Switch>
                 <Route exact path='/' component={Home}/>
-                <Route path='/login' component={Login}/>
+                <Route path='/profile' component={Profile}/>
                 <Route path='/register' component={Register}/>
                 <Route Path='/transfer' component={Transfer}/>
-                <Route Path='/profile' component={Profile}/>
             </Switch>
         );
     }   
