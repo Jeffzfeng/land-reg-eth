@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import SimpleStorageContract from '../../build/contracts/SimpleStorage.json'
+//import SimpleStorageContract from '../../build/contracts/SimpleStorage.json'
 //import LandTransferContract from '../../build/contracts/LandTransfers.json'
-import UsersContract from '../../build/contracts/Users.json'
+import UsersContract from '../../build/contracts/USERS.json'
 
 
 import getWeb3 from '../utils/getWeb3'
@@ -53,8 +53,8 @@ export default class Home extends Component {
      */
     this.contract = require('truffle-contract')
     // FOR SIMPLE STORAGE TEST
-    this.simpleStorage = this.contract(SimpleStorageContract)
-    this.simpleStorage.setProvider(this.state.web3.currentProvider)
+    //this.simpleStorage = this.contract(SimpleStorageContract)
+    //this.simpleStorage.setProvider(this.state.web3.currentProvider)
   
     // LAND TRANSFER
     //this.landTransfer = this.contract(LandTransferContract)

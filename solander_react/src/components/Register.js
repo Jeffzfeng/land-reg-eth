@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import UsersContract from '../../build/contracts/Users.json'
+//import UsersContract from '../../build/contracts/Users.json'
 import getWeb3 from '../utils/getWeb3'
+import UsersContract from '../../build/contracts/USERS.json'
 
 export default class Register extends Component
 {
@@ -19,7 +20,7 @@ export default class Register extends Component
         };
 
         this.handleChangeFirstName = this.handleChangeFirstName.bind(this);
-        this.handleChangeLastName = this.handleChangeLastName.bind(this);
+        //this.handleChangeLastName = this.handleChangeLastName.bind(this);
         this.handleChangeBirthDate = this.handleChangeBirthDate.bind(this);
         this.handleRegister = this.handleRegister.bind(this);
         this.handleCreateUser = this.handleCreateUser.bind(this)
@@ -55,9 +56,9 @@ export default class Register extends Component
         this.setState({firstName: event.target.value});
     }
 
-    handleChangeLastName(event) {
-        this.setState({lastName: event.target.value});
-    }
+    // handleChangeLastName(event) {
+    //     this.setState({lastName: event.target.value});
+    // }
 
     handleChangeBirthDate(event) {
         this.setState({birthDate: event.target.value});
@@ -70,10 +71,10 @@ export default class Register extends Component
             event.preventDefault(); //what does it do?
         }
 
-        else if(this.state.lastName == null || this.state.lastName === ''){
-            alert('missing last name name');
-            event.preventDefault(); //what does it do?
-        }
+        // else if(this.state.lastName == null || this.state.lastName === ''){
+        //     alert('missing last name name');
+        //     event.preventDefault(); //what does it do?
+        // }
 
         else if(this.state.birthDate == null || this.state.birthDate === ''){
             alert('missing birth date name');
@@ -98,11 +99,15 @@ export default class Register extends Component
             userInstance = instance
             console.log("accounts avaialable: ",accounts)
             console.log("in handleCreateUser")
+            return userInstance.get_user_list_length()
+        }).then((result) => {
+            console.log(result.c[0])
             return userInstance.create_user_record(
+                result.c[0],
                 this.state.web3.fromAscii(this.state.firstName),
-                this.state.web3.fromAscii(this.state.lastName),
-                1,
                 this.state.web3.fromAscii(this.state.birthDate), 
+                accounts[0],
+                1,
                 {from: accounts[0]}
             )
           }).then((result) => {
@@ -120,10 +125,6 @@ export default class Register extends Component
                 <h2>Register</h2>
                 <label>
                     <input type="text" placeholder="firstname" value={this.state.firstName} onChange={this.handleChangeFirstName} />
-                </label>
-                <br /><br />
-                <label>
-                    <input type="text" placeholder="lastname" value={this.state.lastName} onChange={this.handleChangeLastName} />
                 </label>
                 <br /><br />
                 <label>
