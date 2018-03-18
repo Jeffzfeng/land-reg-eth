@@ -101,6 +101,10 @@ a.pure-button-selected {
 
 /* NAVBAR */
 
+.navButtons {
+    float: right;
+}
+
 .navbar {
   position: fixed; 
   padding: 4px;
@@ -135,8 +139,7 @@ a.pure-button-selected {
 /* FORMS */
 
 .form {
-    margin-left: 30%;
-    margin-right: 25%;
+    margin-left: 40%;
     padding-top: 10%;
 }
 

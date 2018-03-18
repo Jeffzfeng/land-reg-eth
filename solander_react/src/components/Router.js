@@ -4,6 +4,9 @@ import { Route, Switch } from 'react-router-dom'
 import Home from './Home'
 import Login from './Login'
 import Register from './Register'
+import Transfer from './Transfer'
+import Profile from './Profile'
+
 
 // The Main component renders one of the three provided
 // Routes (provided that one matches). Both the /roster
@@ -16,9 +19,11 @@ export default class Router extends Component{
 render() {
     return (
             <Switch>
-              <Route exact path='/' component={Home}/>
+                <Route exact path='/' component={Home}/>
                 <Route path='/login' component={Login}/>
                 <Route path='/register' component={Register}/>
+                <Route Path='/transfer' component={Transfer}/>
+                <Route Path='/profile' component={Profile}/>
             </Switch>
         );
     }   
