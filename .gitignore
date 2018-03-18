@@ -1,2 +1,3 @@
 .idea/
 solander_react/build
+solander_react/node_modules/.cache/*

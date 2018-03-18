@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import UsersContract from '../../build/contracts/Users.json'
+import UsersContract from '../../build/contracts/USERS.json'
 import getWeb3 from '../utils/getWeb3'
 
 export default class Transfer extends Component

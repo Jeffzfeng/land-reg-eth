@@ -16,9 +16,8 @@ export default class Header extends Component {
                 <div className="navButtons">   
                     <ul>
                         <li><Link to='/'>Home</Link></li>
-                        <li><Link to='/login'>Login</Link></li>
-                        <li><Link to='/register'>Register</Link></li>
                         <li><Link to='/profile'>Profile</Link></li>
+                        <li><Link to='/register'>Register</Link></li>
                         <li><Link to='/transfer'>Land Transfer</Link></li>
                     </ul>
                 </div>

@@ -143,6 +143,10 @@ a.pure-button-selected {
     padding-top: 10%;
 }
 
+.profile {
+    padding-top: 10%;
+}
+
 /* LIST BUTTONS */ 
 ul{
     list-style-type: none;
