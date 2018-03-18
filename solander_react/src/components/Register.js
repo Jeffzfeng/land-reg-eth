@@ -97,7 +97,7 @@ export default class Register extends Component
         this.state.web3.eth.getAccounts((error, accounts) => {
             this.state.user.deployed().then((instance) => {
             userInstance = instance
-            console.log("accounts avaialable: ",accounts)
+            console.log("current ethereum account: ",accounts)
             console.log("in handleCreateUser")
             return userInstance.get_user_list_length()
         }).then((result) => {

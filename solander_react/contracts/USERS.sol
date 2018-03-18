@@ -81,6 +81,10 @@ contract USERS {
         return mul[user_id];
     }
 
+    function get_user_record_from_user_id_new (uint32 user_id) public view returns (bytes32, bytes32) {
+        return (mul[user_id].full_name, mul[user_id].birth_date);
+    }
+
     function user_record_exists(uint32 user_id) public view returns (bool) {
         return mul[user_id].init;
     }
