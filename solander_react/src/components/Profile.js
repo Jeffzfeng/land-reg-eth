@@ -58,18 +58,18 @@ export default class Profile extends Component
          }).then((result) => {
          	return userInstance.get_user_record_from_user_id_new(result)
          }).then((result) => {
-         	  var asc_fname, asc_lname, asc_bdate;
-              var fname, lname, bdate;
 
 	          // remove insignificant trailing zeroes
-	          asc_fname = result[0].replace(/0+$/g, "")
-	          asc_bdate = result[1].replace(/0+$/g, "")
+	          var asc_fname = result[0].replace(/0+$/g, "")
+	          var asc_bdate = result[1].replace(/0+$/g, "")
 	          //asc_lname = result[1].replace(/0+$/g, "")
 	          //asc_bdate = result[2].replace(/0+$/g, "")
 
 	          // convert to ASCII
-	          fname = this.state.web3.toAscii(asc_fname)
-	          bdate = this.state.web3.toAscii(asc_bdate)
+	          var fname = this.state.web3.toAscii(asc_fname)
+	          var bdate = this.state.web3.toAscii(asc_bdate)
+
+            // print for testing
          	  console.log(fname)
          	  console.log(bdate)
          	  console.log(result)
