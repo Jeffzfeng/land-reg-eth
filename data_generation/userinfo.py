@@ -22,20 +22,30 @@ UserInfo record:
 '''
 
 # Number of records to generate
-num_records = 20
+num_records = 1000
+use_memory = True
 
-first_names = ['Yanira', 'Faustina', 'Keren', 'Brice', 'Angelia', 'Oma', 'Hedy', 'Leena', 'Hassie', 'Billy', 'Dori', 'Cristina', 'Jeffie', 'Lonny', 'Catherine', 'Elizabet', 'Raul', 'Earlene', 'Andrea', 'Rubin', ]
-last_names = ['Fangman', 'Oblinski', 'Petillo', 'Verrill', 'Bloss', 'Dodimead', 'Sturner', 'Swartwood', 'Remkus', 'Hershey', 'Rubinich', 'Sarni', 'Shorb', 'Rogriguez', 'Skaare', 'Rodemeyer', 'Kuker', 'Geml', 'Mulliniks', 'Mering', ]
+first_names_memory = []
+last_names_memory = []
+
+first_names = ['Margert', 'Siu', 'Pearl', 'Melania', 'Charmaine', 'Leigh', 'Yukiko', 'Kandy', 'Robt', 'Marsha', 'Mica', 'Collene', 'Trinidad', 'Lorelei', 'Hanh']
+last_names = ['Jefferson', 'Nottingham', 'Okumoto', 'Leadley', 'Marklund', 'Agnes', 'Hoblit', 'Koziak', 'Trish', 'Nolin', 'Fulham', 'Santarelli', 'Argetsinger']
 
 def get_sin():
 	SIN = "{:09}".format(random.sample(range(0, 1000000000), 1)[0])
 	return sha256(SIN.encode('ascii')).hexdigest()
 
 def get_fname():
-	return random.choice(first_names)
+	if use_memory == True:
+		return random.choice(first_names)
+	else:
+		return random.choice(first_names_memory)
 
 def get_lname():
-	return random.choice(last_names)
+	if use_memory == True:
+		return random.choice(last_names)
+	else:
+		return random.choice(last_names_memory)
 
 def get_birthdate():
 	oldest_age = 100
@@ -81,6 +91,7 @@ def gen_names_arrays():
 		for i in range(0, num_iterations):
 			pos = random.randrange(1, num_entries)
 			fnames+=str('\''+entries[pos][0]+'\', ')
+			first_names_memory.append(entries[pos][0])
 
 	with open('lastnames.csv', 'rU') as f:
 		entries = list(csv.reader(f))
@@ -90,6 +101,7 @@ def gen_names_arrays():
 		for i in range(0, num_iterations):
 			pos = random.randrange(1, num_entries)
 			lnames+=str('\''+entries[pos][0]+'\', ')
+			last_names_memory.append(entries[pos][0])
 
 	fnames+=str(']')
 	lnames+=str(']')
@@ -104,6 +116,8 @@ Generate userInfo records in JSON format using above helper functions
 '''
 data = {}
 data['userInfo'] = []
+
+gen_names_arrays();
 
 for i in range(0, num_records):
 	data['userInfo'].append({
