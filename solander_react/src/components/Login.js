@@ -77,10 +77,25 @@ export default class Login extends Component{
         console.log("in handleButtonLogin")
         return userInstance.get_user_record(1)
       }).then((result) => {
-          console.log(this.state.web3.toAscii(result[0]))
-          console.log(this.state.web3.toAscii(result[1]))
-          console.log(this.state.web3.toAscii(result[2]))
-          alert("Welcome back !")
+          var asc_fname, asc_lname, asc_bdate;
+          var fname, lname, bdate;
+
+          // remove insignificant trailing zeroes
+          asc_fname = result[0].replace(/0+$/g, "")
+          asc_lname = result[1].replace(/0+$/g, "")
+          asc_bdate = result[2].replace(/0+$/g, "")
+
+          // convert to ASCII
+          fname = this.state.web3.toAscii(asc_fname)
+          lname = this.state.web3.toAscii(asc_lname)
+          bdate = this.state.web3.toAscii(asc_bdate)
+
+          console.log("logged in with account ", accounts[0])
+          console.log(fname)
+          console.log(lname)
+          console.log(bdate)
+
+          alert("Welcome back !", fname)
       })
     })
   }
