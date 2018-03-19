@@ -12,8 +12,9 @@ export default class Register extends Component
     {
         super(props);
         this.state = {
+            numUsers: 0,
             user: null,
-            user_id: null,
+            userID: null,
             parcel: null,
             contract: null,
             fullName: '',
@@ -101,8 +102,8 @@ export default class Register extends Component
             return userInstance.get_user_list_length()
         }).then((result) => {
 
-            this.setState({user_id: result.c[0] + 1})
-            console.log(this.state.user_id)
+            this.setState({userID: result.c[0] + 1})
+            console.log(this.state.userID)
 
             return userInstance.create_user_record(
                 result.c[0],
@@ -118,7 +119,7 @@ export default class Register extends Component
             console.log("User added to the blockchain")
             this.setState({sinID: this.state.sinID + 1})
                 //mocking a pin for the land
-            this.handleCreateParcel(this.state.user_id)
+            this.handleCreateParcel(this.state.userID)
 
            })
         })
@@ -132,7 +133,7 @@ export default class Register extends Component
                 this.state.parcel.deployed().then((instance) => {
                 parcelInstance = instance
                 console.log("in handleCreateParcel")
-                return parcelInstance.create_parcel_record(pin, this.state.user_id, {from: accounts[0]})
+                return parcelInstance.create_parcel_record(pin, this.state.userID, {from: accounts[0]})
             }).then((result) => {
                 console.log(result)    
             })  
@@ -141,20 +142,28 @@ export default class Register extends Component
 
     render(){
         return (
-            <div className="container">
-            <form onSubmit={this.handleRegister} className="form pure-form pure-form-alligned">
-                <h1 className="form-title">Register User</h1>
-                <br /><br /><br />
-                <label>
-                    <input className="pure-form pure-input-1-3" type="text" placeholder="fullname" value={this.state.fullName} onChange={this.handleChangeFullName} />
-                </label>
-                <br /><br />
-                <label>
-                    <input className="pure-form pure-input-1-3" type="text" placeholder="brithdate e.g. MM/DD/YYYY" value={this.state.birthDate} onChange={this.handleChangeBirthDate} />
-                </label>
-                <br /><br />
-                <input type="submit" value="Register" className="pure-button pure-button-primary button-xlarge form-button"/>
-            </form>
+            <div className="pure-g">
+                <div className="pure-u-13-24">
+                <form onSubmit={this.handleRegister} className="form pure-form pure-form-alligned">
+                    <h1 className="form-title">Register User</h1>
+                    <br /><br /><br />
+                    <label>
+                        <input className="pure-form pure-input-1-2" type="text" placeholder="fullname" value={this.state.fullName} onChange={this.handleChangeFullName} />
+                    </label>
+                    <br /><br />
+                    <label>
+                        <input className="pure-form pure-input-1-2" type="text" placeholder="brithdate e.g. MM/DD/YYYY" value={this.state.birthDate} onChange={this.handleChangeBirthDate} />
+                    </label>
+                    <br /><br />
+                    <input type="submit" value="Register" className="pure-button pure-button-primary button-xlarge form-button"/>
+                </form>
+                </div>
+                <div className="pure-u-8-24 right-content">
+                    <br /><br />
+                    <h1>Current number of users signed up
+                        <div className="bold-red">{this.state.numUsers}</div>
+                    </h1>
+                </div>
             </div>
         );
     }

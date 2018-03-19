@@ -19,7 +19,8 @@ export default class Transfer extends Component
             landPIN: '',
             ethAddr: '',
             PIN: '',
-            EthForTransfer: ''
+            EthForTransfer: '',
+            numTransfers: 0
         };
         
     }
@@ -127,30 +128,38 @@ export default class Transfer extends Component
     //this form is for the buyer
     render(){
         return (
+        <div className="pure-g">
+          <div className="pure-u-13-24">
             <form onSubmit={this.handleRegister} className="form pure-form pure-form-alligned">
-                <h2>Create New Land Transfer</h2>
+                <h1 className="form-title">Create New Land Transfer</h1>
+                <br /><br /><br /><br />
                 <label>
-                    <input type="text" placeholder="Seller ID" value={this.state.sellerID} onChange={this.handleChangeSellerID} />
+                    <input className="pure-form pure-input-1-2" type="text" placeholder="Seller ID" value={this.state.sellerID} onChange={this.handleChangeSellerID} />
                 </label>
                 <br /><br />
-
-
                 <label>
-                    <input type="text" placeholder="Selling Price" value={this.state.salePrice} onChange={this.handleChangeSalePrice} />
-                </label>
-                <br /><br />
-
-                <label>
-                    <input type="text" placeholder="landPIN" value={this.state.landPIN} onChange={this.handleChangeLandPIN} />
+                    <input className="pure-form pure-input-1-2" type="text" placeholder="Selling Price" value={this.state.salePrice} onChange={this.handleChangeSalePrice} />
                 </label>
                 <br /><br />
 
                 <label>
-                    <input type="text" placeholder="Seller Ethereum Address" value={this.state.ethAddr} onChange={this.handleChangeEthAddr} />
+                    <input className="pure-form pure-input-1-2" type="text" placeholder="landPIN" value={this.state.landPIN} onChange={this.handleChangeLandPIN} />
                 </label>
                 <br /><br />
-                <input type="submit" value="Submit" className="pure-button pure-button-primary"/>
+                <label>
+                    <input className="pure-form pure-input-1-2" type="text" placeholder="Seller Ethereum Address" value={this.state.ethAddr} onChange={this.handleChangeEthAddr} />
+                </label>
+                <br /><br />
+                <input type="submit" value="Submit" className="pure-button pure-button-primary button-xlarge form-button"/>
             </form>
+         </div>
+        <div className="pure-u-8-24 right-content">
+            <br /><br />
+            <h1>Current number of transfers registered
+                <div className="bold-red">{this.state.numTransfers}</div>
+            </h1>
+        </div>
+      </div>
         );
     }
 }
