@@ -141,20 +141,21 @@ export default class Register extends Component
 
     render(){
         return (
+            <div className="container">
             <form onSubmit={this.handleRegister} className="form pure-form pure-form-alligned">
-                <h2>Register</h2>
+                <h1 className="form-title">Register User</h1>
+                <br /><br /><br />
                 <label>
-                    <input type="text" placeholder="fullname" value={this.state.fullName} onChange={this.handleChangeFullName} />
+                    <input className="pure-form pure-input-1-3" type="text" placeholder="fullname" value={this.state.fullName} onChange={this.handleChangeFullName} />
                 </label>
                 <br /><br />
                 <label>
-                    <input type="text" placeholder="brithdate e.g. MM/DD/YYYY" value={this.state.birthDate} onChange={this.handleChangeBirthDate} />
+                    <input className="pure-form pure-input-1-3" type="text" placeholder="brithdate e.g. MM/DD/YYYY" value={this.state.birthDate} onChange={this.handleChangeBirthDate} />
                 </label>
                 <br /><br />
-
-
-                <input type="submit" value="Register" className="pure-button pure-button-primary"/>
+                <input type="submit" value="Register" className="pure-button pure-button-primary button-xlarge form-button"/>
             </form>
+            </div>
         );
     }
 }
