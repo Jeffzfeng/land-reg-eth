@@ -108,28 +108,23 @@ export default class Transfer extends Component
         var userInstance
 
         // add error checking later
-
+        //retrieve the seller ethereum id from the sellerid
+        //then call the createlandtransfer function
         this.state.web3.eth.getAccounts((error, accounts) => {
             this.state.user.deployed().then((instance) => {
             userInstance = instance
-            console.log("accounts avaialable: ",accounts)
-            console.log("in handleCreateUser")
-            return userInstance.create_user_record(
-                this.state.web3.fromAscii(this.state.firstName),
-                this.state.web3.fromAscii(this.state.lastName),
-                1,
-                this.state.web3.fromAscii(this.state.birthDate), 
-                {from: accounts[0]}
+            console.log("in transfer js file");
+            return userInstance.get_ethereum_address_from_user_id(
+                this.state.web3.fromAscii(this.state.sellerID),{from: accounts[0]}
             )
           }).then((result) => {
-            console.log(result)
-             alert("User Created!")
-            console.log("User added to the blockchain")
-            this.setState({sinID: this.state.sinID + 1})
+              console.log("ethereum address is: ")
+              console.log(result);
            })
         })
     }
-
+    //the buyer id is just accounts[0]
+    //this form is for the buyer
     render(){
         return (
             <form onSubmit={this.handleRegister} className="form pure-form pure-form-alligned">
@@ -138,10 +133,7 @@ export default class Transfer extends Component
                     <input type="text" placeholder="Seller ID" value={this.state.sellerID} onChange={this.handleChangeSellerID} />
                 </label>
                 <br /><br />
-                <label>
-                    <input type="text" placeholder="Buyer ID" value={this.state.buyerID} onChange={this.handleChangeBuyerID} />
-                </label>
-                <br /><br />
+
 
                 <label>
                     <input type="text" placeholder="Selling Price" value={this.state.salePrice} onChange={this.handleChangeSalePrice} />

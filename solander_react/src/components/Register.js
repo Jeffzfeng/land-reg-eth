@@ -117,9 +117,9 @@ export default class Register extends Component
              alert("User Created!")
             console.log("User added to the blockchain")
             this.setState({sinID: this.state.sinID + 1})
-            this.handleCreateParcel(3)
-            this.handleCreateParcel(4)
-            this.handleCreateParcel(5)
+                //mocking a pin for the land
+            this.handleCreateParcel(this.state.user_id)
+
            })
         })
     }
@@ -151,6 +151,7 @@ export default class Register extends Component
                     <input type="text" placeholder="brithdate e.g. MM/DD/YYYY" value={this.state.birthDate} onChange={this.handleChangeBirthDate} />
                 </label>
                 <br /><br />
+
 
                 <input type="submit" value="Register" className="pure-button pure-button-primary"/>
             </form>
