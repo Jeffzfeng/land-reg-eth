@@ -14,6 +14,7 @@ export default class Profile extends Component
             contract: null,
             firstName: '',
             birthDate: '',
+            lawyerID: null,
             ownedPINs: '',
             web3: null
         };
@@ -56,24 +57,28 @@ export default class Profile extends Component
             console.log("in handleProfilePage")
             return userInstance.get_user_id_from_eth_addr(accounts[0])
          }).then((result) => {
-         	return userInstance.get_user_record_from_user_id_new(result)
+         	return userInstance.get_user_record_from_user_id_tuple(result)
          }).then((result) => {
 
 	          // remove insignificant trailing zeroes
-	          var asc_fname = result[0].replace(/0+$/g, "")
+	          var asc_fullname = result[0].replace(/0+$/g, "")
 	          var asc_bdate = result[1].replace(/0+$/g, "")
-	          //asc_lname = result[1].replace(/0+$/g, "")
-	          //asc_bdate = result[2].replace(/0+$/g, "")
+            //var asc_eth_address = result[3].replace(/0+$/g, "")
 
-	          // convert to ASCII
-	          var fname = this.state.web3.toAscii(asc_fname)
+	          // // convert to ASCII
+	          var fullname = this.state.web3.toAscii(asc_fullname)
 	          var bdate = this.state.web3.toAscii(asc_bdate)
+            var eth_address = result[2]
+            var lawyer_id = result[3].c[0]
 
-            // print for testing
-         	  console.log(fname)
+           //  // print for testing
+         	  console.log(fullname)
          	  console.log(bdate)
-         	  console.log(result)
-         	  this.setState({firstName: fname})
+            console.log(lawyer_id)
+            console.log(eth_address)
+         	  //console.log(result)
+         	  this.setState({firstName: fullname})
+            this.setState({birthDate: bdate})
          })
       })
     }
@@ -82,6 +87,9 @@ export default class Profile extends Component
     return (
     	<div className="profile">
    			<h2>Welcome Back, {this.state.firstName}</h2>
+        <p>Birthdate: {this.state.birthDate} </p>
+        <p>LawyerID: {this.state.lawyerID} </p>
+        <p>PIN owned: {this.state.pinList} </p>
  		</div>
     );
   }
