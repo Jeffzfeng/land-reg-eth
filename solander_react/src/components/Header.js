@@ -19,7 +19,7 @@ export default class Header extends Component {
                     <li><Link to='/'><i className="fa fa-institution"></i><br/>Home</Link></li>
                     <li><Link to='/profile'><i className="fa fa-user-circle"></i><br/>Profile</Link></li>
                     <li><Link to='/register'><i className="fa fa-clipboard"></i><br/>Register</Link></li>
-                    <li><Link to='/transfer'><i className="fa fa-share"></i><br/>Land Transfer</Link></li>
+                    <li><Link to='/transfer'><i className="fa fa-share"></i><br/>Transfer</Link></li>
                 </ul>
             </nav>
         </div>

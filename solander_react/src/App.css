@@ -126,9 +126,6 @@ a.pure-button-selected {
 
 /* NAVBAR */
 
-.navButtons {
-    padding: 10%;
-}
 
 /* Add a black background color to the top navigation */
 .topnav {
@@ -142,7 +139,7 @@ a.pure-button-selected {
     float: left;
     color: #f2f2f2;
     text-align: center;
-    padding: 10px 25px;
+    padding: 0px 15px;
     text-decoration: none;
     font-size: 20px;
     font-family: 'Oswald', 'Arial Narrow', sans-serif;
@@ -225,7 +222,6 @@ ul{
     display: flex;
 }
 li{
-    padding: 3px;
     border: 2px solid rgb(0,0,0);
     margin-right: 4px;
     border-radius: 6px;
