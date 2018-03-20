@@ -14,8 +14,9 @@ export default class Profile extends Component
             contract: null,
             firstName: '',
             birthDate: '',
+            ethereumAddress: null,
             lawyerID: null,
-            ownedPINs: '',
+            ownedPINs: [],
             web3: null
         };
         
@@ -48,7 +49,7 @@ export default class Profile extends Component
     }
 
     handleProfilePage(){
-	var userInstance
+	  var userInstance
 
         this.state.web3.eth.getAccounts((error, accounts) => {
             this.state.user.deployed().then((instance) => {
@@ -63,7 +64,6 @@ export default class Profile extends Component
 	          // remove insignificant trailing zeroes
 	          var asc_fullname = result[0].replace(/0+$/g, "")
 	          var asc_bdate = result[1].replace(/0+$/g, "")
-            //var asc_eth_address = result[3].replace(/0+$/g, "")
 
 	          // // convert to ASCII
 	          var fullname = this.state.web3.toAscii(asc_fullname)
@@ -76,9 +76,10 @@ export default class Profile extends Component
          	  console.log(bdate)
             console.log(lawyer_id)
             console.log(eth_address)
-         	  //console.log(result)
          	  this.setState({firstName: fullname})
             this.setState({birthDate: bdate})
+            this.setState({ethereumAddress: eth_address})
+            this.setState({lawyerID: lawyer_id})
          })
       })
     }
@@ -87,9 +88,20 @@ export default class Profile extends Component
     return (
     	<div className="profile">
    			<h2>Welcome Back, {this.state.firstName}</h2>
-        <p>Birthdate: {this.state.birthDate} </p>
-        <p>LawyerID: {this.state.lawyerID} </p>
+        <p>
+           Birthdate:
+          <div className="profile-field">{this.state.birthDate}</div>
+        </p>
+        <p>
+           LawyerID:
+          <div className="profile-field">{this.state.lawyerID}</div>
+        </p>
+        <p>
+           Eth Wallet Address:
+          <div className="profile-field">{this.state.ethereumAddress}</div>
+        </p>
         <p>PIN owned: {this.state.pinList} </p>
+        <p>Pending Transfers: {this.state.pendingTransfers} </p>
  		</div>
     );
   }

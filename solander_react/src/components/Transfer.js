@@ -88,7 +88,7 @@ export default class Transfer extends Component
             event.preventDefault(); //what does it do?
         }
 
-        else if(this.state.salePrice ==null || this.state.salePrice == ''){
+        else if(this.state.salePrice == null || this.state.salePrice === ''){
             alert('mising sale price');
             event.preventDefault();
         }

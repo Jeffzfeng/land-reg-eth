@@ -144,7 +144,7 @@ export default class Register extends Component
         return (
             <div className="pure-g">
                 <div className="pure-u-13-24">
-                <form onSubmit={this.handleRegister} className="form pure-form pure-form-alligned">
+                <form onSubmit={this.handleRegister} className="form pure-form pure-form-alligned register-form">
                     <h1 className="form-title">Register User</h1>
                     <br /><br /><br />
                     <label>
