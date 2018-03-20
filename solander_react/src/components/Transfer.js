@@ -13,9 +13,14 @@ export default class Transfer extends Component
             landTransfer: null,
             contract: null,
             web3: null,
-            SellerID: '',
+            sellerID: '',
+            buyerID: '',
+            salePrice: '',
+            landPIN: '',
+            ethAddr: '',
             PIN: '',
-            EthForTransfer: ''
+            EthForTransfer: '',
+            numTransfers: 0
         };
         
     }
@@ -46,31 +51,50 @@ export default class Transfer extends Component
     }
 
     handleChangeSellerID(event) {
-        this.setState({SellerID: event.target.value});
+        this.setState({sellerID: event.target.value});
     }
 
-    handleChangePIN(event) {
-        this.setState({PIN: event.target.value});
+    handleChangeBuyerID(event) {
+        this.setState({buyerID: event.target.value});
     }
 
-    handleChangeAmount(event) {
-        this.setState({EthForTransfer: event.target.value});
+    handleChangeLandPIN(event) {
+        this.setState({landPIN: event.target.value});
     }
+
+    handleChangeEthAddr(event) {
+        this.setState({ethAddr: event.target.value});
+    }
+
+    handleChangeSalePrice(event){
+        this.setState({salePrice: event.target.value});
+    }
+
 
     handleTransfer(event){
 
-        if(this.state.SellerID == null || this.state.firstName === ''){
+        if(this.state.sellerID == null || this.state.sellerID === ''){
             alert('missing seller ID');
             event.preventDefault(); //what does it do?
         }
 
-        else if(this.state.PIN == null || this.state.lastName === ''){
-            alert('missing PIN');
+        else if(this.state.buyerID == null || this.state.buyerID === ''){
+            alert('missing buyerID');
             event.preventDefault(); //what does it do?
         }
 
-        else if(this.state.EthForTransfer == null || this.state.birthDate === ''){
-            alert('missing ether amount to transfer');
+        else if(this.state.ethAddr == null || this.state.ethAddr === ''){
+            alert('missing ethereum address');
+            event.preventDefault(); //what does it do?
+        }
+
+        else if(this.state.salePrice == null || this.state.salePrice === ''){
+            alert('mising sale price');
+            event.preventDefault();
+        }
+
+        else if(this.state.landPIN == null || this.state.landPIN === ''){
+            alert('missing PIN');
             event.preventDefault(); //what does it do?
         }
 
@@ -85,46 +109,57 @@ export default class Transfer extends Component
         var userInstance
 
         // add error checking later
-
+        //retrieve the seller ethereum id from the sellerid
+        //then call the createlandtransfer function
         this.state.web3.eth.getAccounts((error, accounts) => {
             this.state.user.deployed().then((instance) => {
             userInstance = instance
-            console.log("accounts avaialable: ",accounts)
-            console.log("in handleCreateUser")
-            return userInstance.create_user_record(
-                this.state.web3.fromAscii(this.state.firstName),
-                this.state.web3.fromAscii(this.state.lastName),
-                1,
-                this.state.web3.fromAscii(this.state.birthDate), 
-                {from: accounts[0]}
+            console.log("in transfer js file");
+            return userInstance.get_ethereum_address_from_user_id(
+                this.state.web3.fromAscii(this.state.sellerID),{from: accounts[0]}
             )
           }).then((result) => {
-            console.log(result)
-             alert("User Created!")
-            console.log("User added to the blockchain")
-            this.setState({sinID: this.state.sinID + 1})
+              console.log("ethereum address is: ")
+              console.log(result);
            })
         })
     }
-
+    //the buyer id is just accounts[0]
+    //this form is for the buyer
     render(){
         return (
+        <div className="pure-g">
+          <div className="pure-u-13-24">
             <form onSubmit={this.handleRegister} className="form pure-form pure-form-alligned">
-                <h2>Create New Land Transfer</h2>
+                <h1 className="form-title">Create New Land Transfer</h1>
+                <br /><br /><br /><br />
                 <label>
-                    <input type="text" placeholder="Seller ID" value={this.state.firstName} onChange={this.handleChangeFirstName} />
+                    <input className="pure-form pure-input-1-2" type="text" placeholder="Seller ID" value={this.state.sellerID} onChange={this.handleChangeSellerID} />
                 </label>
                 <br /><br />
                 <label>
-                    <input type="text" placeholder="PIN" value={this.state.lastName} onChange={this.handleChangeLastName} />
+                    <input className="pure-form pure-input-1-2" type="text" placeholder="Selling Price" value={this.state.salePrice} onChange={this.handleChangeSalePrice} />
+                </label>
+                <br /><br />
+
+                <label>
+                    <input className="pure-form pure-input-1-2" type="text" placeholder="landPIN" value={this.state.landPIN} onChange={this.handleChangeLandPIN} />
                 </label>
                 <br /><br />
                 <label>
-                    <input type="text" placeholder="Eth Amount" value={this.state.birthDate} onChange={this.handleChangeBirthDate} />
+                    <input className="pure-form pure-input-1-2" type="text" placeholder="Seller Ethereum Address" value={this.state.ethAddr} onChange={this.handleChangeEthAddr} />
                 </label>
                 <br /><br />
-                <input type="submit" value="Submit" className="pure-button pure-button-primary"/>
+                <input type="submit" value="Submit" className="pure-button pure-button-primary button-xlarge form-button"/>
             </form>
+         </div>
+        <div className="pure-u-8-24 right-content">
+            <br /><br />
+            <h1>Current number of transfers registered
+                <div className="bold-red">{this.state.numTransfers}</div>
+            </h1>
+        </div>
+      </div>
         );
     }
 }

@@ -14,7 +14,9 @@ export default class Profile extends Component
             contract: null,
             firstName: '',
             birthDate: '',
-            ownedPINs: '',
+            ethereumAddress: null,
+            lawyerID: null,
+            ownedPINs: [],
             web3: null
         };
         
@@ -47,7 +49,7 @@ export default class Profile extends Component
     }
 
     handleProfilePage(){
-	var userInstance
+	  var userInstance
 
         this.state.web3.eth.getAccounts((error, accounts) => {
             this.state.user.deployed().then((instance) => {
@@ -56,24 +58,28 @@ export default class Profile extends Component
             console.log("in handleProfilePage")
             return userInstance.get_user_id_from_eth_addr(accounts[0])
          }).then((result) => {
-         	return userInstance.get_user_record_from_user_id_new(result)
+         	return userInstance.get_user_record_from_user_id_tuple(result)
          }).then((result) => {
-         	  var asc_fname, asc_lname, asc_bdate;
-              var fname, lname, bdate;
 
 	          // remove insignificant trailing zeroes
-	          asc_fname = result[0].replace(/0+$/g, "")
-	          asc_bdate = result[1].replace(/0+$/g, "")
-	          //asc_lname = result[1].replace(/0+$/g, "")
-	          //asc_bdate = result[2].replace(/0+$/g, "")
+	          var asc_fullname = result[0].replace(/0+$/g, "")
+	          var asc_bdate = result[1].replace(/0+$/g, "")
 
-	          // convert to ASCII
-	          fname = this.state.web3.toAscii(asc_fname)
-	          bdate = this.state.web3.toAscii(asc_bdate)
-         	  console.log(fname)
+	          // // convert to ASCII
+	          var fullname = this.state.web3.toAscii(asc_fullname)
+	          var bdate = this.state.web3.toAscii(asc_bdate)
+            var eth_address = result[2]
+            var lawyer_id = result[3].c[0]
+
+           //  // print for testing
+         	  console.log(fullname)
          	  console.log(bdate)
-         	  console.log(result)
-         	  this.setState({firstName: fname})
+            console.log(lawyer_id)
+            console.log(eth_address)
+         	  this.setState({firstName: fullname})
+            this.setState({birthDate: bdate})
+            this.setState({ethereumAddress: eth_address})
+            this.setState({lawyerID: lawyer_id})
          })
       })
     }
@@ -82,6 +88,20 @@ export default class Profile extends Component
     return (
     	<div className="profile">
    			<h2>Welcome Back, {this.state.firstName}</h2>
+        <p>
+           Birthdate:
+          <div className="profile-field">{this.state.birthDate}</div>
+        </p>
+        <p>
+           LawyerID:
+          <div className="profile-field">{this.state.lawyerID}</div>
+        </p>
+        <p>
+           Eth Wallet Address:
+          <div className="profile-field">{this.state.ethereumAddress}</div>
+        </p>
+        <p>PIN owned: {this.state.pinList} </p>
+        <p>Pending Transfers: {this.state.pendingTransfers} </p>
  		</div>
     );
   }
