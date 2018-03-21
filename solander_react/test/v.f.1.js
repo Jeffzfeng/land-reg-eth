@@ -20,10 +20,10 @@ contract('Store Ontario\'s Land Data', async (accounts) => {
         //  - lawyerB is userB's lawyer
         var users =
         [
-            {'uid':1, 'name':"userA", 'bd':"31011905", 'acc':accounts[0], 'lawyer_uid':21},
-            {'uid':9, 'name':"userB", 'bd':"07061805", 'acc':accounts[1], 'lawyer_uid':29},
-            {'uid':21, 'name':"lawyerA", 'bd':"07071907", 'acc':accounts[2], 'lawyer_uid':29},
-            {'uid':29, 'name':"lawyerB", 'bd':"21091990", 'acc':accounts[3], 'lawyer_uid':21}
+            {'uid':1, 'name':"userA", 'th':"31011905", 'acc':accounts[0], 'is_lawyer': false, 'lawyer_uid':21},
+            {'uid':9, 'name':"userB", 'th':"07061805", 'acc':accounts[1], 'is_lawyer': false, 'lawyer_uid':29},
+            {'uid':21, 'name':"lawyerA", 'th':"07071907", 'acc':accounts[2], 'is_lawyer': true, 'lawyer_uid':0},
+            {'uid':29, 'name':"lawyerB", 'th':"21091990", 'acc':accounts[3], 'is_lawyer': true, 'lawyer_uid':0}
         ];
 
         /*Create new user and verify persistency*/
@@ -31,7 +31,7 @@ contract('Store Ontario\'s Land Data', async (accounts) => {
         {
             var user = users[i];
             /*Create each user records and validate persistency*/
-            await pt_con.create_user_record(user.uid, user.name, user.bd, user.acc, user.lawyer_uid, {from: admin_acc});
+            await pt_con.create_user_record(user.uid, user.name, user.th, user.acc, user.is_lawyer, user.lawyer_uid, {from: admin_acc});
             let ret_user = await pt_con.user_record_exists(user.uid);
             assert.equal(ret_user, true, user.name + " creation");
         }

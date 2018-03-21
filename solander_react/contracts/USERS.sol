@@ -22,22 +22,19 @@ contract USERS {
 
             init        is the structure initialized?
             full_name   legal name
-            birth_date  (or organization founding date)
+            tin_hash    Hash(Tax Information Number + SECRET)
             ~eth_add
             lawyer_id   user_id of lawyer
-
-            [!] PENDING
-
-            user_type   (e.g. verify that a user is a lawyer)
+            is_lawyer   defines user type
         */
-
-        bool init;
-
         bytes32 full_name;
-        bytes32 birth_date;
+        bytes32 tin_hash;
 
         address ethereum_address;
         uint32 lawyer_id;
+
+        bool is_lawyer;
+        bool init;
     }
     
     function return_contract_address () public view returns (address) {
@@ -71,7 +68,7 @@ contract USERS {
 
     uint32[] user_id_list;
 
-    function create_user_record (uint32 user_id, bytes32 _fn, bytes32 _bd, address _ea, uint32 _li) public onlyAdmin {
+    function create_user_record (uint32 user_id, bytes32 _fn, bytes32 _th, address _ea, bool _il, uint32 _li) public onlyAdmin {
 
         require(!user_record_exists(user_id));
         mul[user_id] = UserRecord({
@@ -79,10 +76,11 @@ contract USERS {
             init: true,
 
             full_name: _fn,
-            birth_date: _bd,
+            tin_hash: _th,
 
             ethereum_address: _ea,
-            lawyer_id: _li
+            is_lawyer: _il,
+            lawyer_id: (_il) ? 0 : (_li)
         });
 
         eth_addr_to_uid[_ea] = user_id;
@@ -102,7 +100,7 @@ contract USERS {
     }
 
     function get_user_record_from_user_id_tuple (uint32 user_id) public view returns (bytes32, bytes32, address, uint32) {
-        return (mul[user_id].full_name, mul[user_id].birth_date, mul[user_id].ethereum_address, mul[user_id].lawyer_id);
+        return (mul[user_id].full_name, mul[user_id].tin_hash, mul[user_id].ethereum_address, mul[user_id].lawyer_id);
     }
 
     function user_record_exists(uint32 user_id) public view returns (bool) {
