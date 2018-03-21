@@ -76,20 +76,21 @@ contract PIN_TRANSFER is USERS, PARCELS {
     //      (one active request per PIN)
     mapping(uint32 => PinTransferRequest) pptr;
 
-    //seller ethereum address
-    function create_pin_transfer_request(uint32 _seller_id, uint32 _buyer_id, uint32 _sale_price_in_wei, uint32 _pin, address _sea) public {
-
-        // [!] make _sea an optional variable
-
+    function create_pin_transfer_request(uint32 _buyer_id, uint32 _sale_price_in_wei, uint32 _pin) public {
+    
         // PRE-CONDITIONS
-        //  1. no active requests for this property
-        require(pptr[_pin].init == false);
 
-        //  2. message sender must be the property owner
+        //  0. pin must exist
+        require(PARCELS.parcel_record_exists(_pin));
+
+        //  1. seller must own the given property
+        uint32 _seller_id = PARCELS.return_current_owner_of_pin(_pin);
+
+        //  2. message sender must be the "seller"
         require(USERS.is_equal_user_ethereum_address_and_input(_seller_id, msg.sender));
 
-        //  3. seller must own the given property
-        require(_seller_id == PARCELS.return_current_owner_of_pin(_pin));
+        //  3. no active requests for this property
+        require(pptr[_pin].init == false);
 
         //  [!] 4. assume that each user always has a valid lawyer
 
@@ -99,7 +100,7 @@ contract PIN_TRANSFER is USERS, PARCELS {
 
             pin: _pin,
             sale_price_in_wei: _sale_price_in_wei,
-            seller_ethereum_address: _sea,
+            seller_ethereum_address: msg.sender,
 
             seller_id: _seller_id,
             buyer_id: _buyer_id,

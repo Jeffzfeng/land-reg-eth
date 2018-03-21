@@ -78,7 +78,7 @@ contract('PIN_TRANSFER', async (accounts) => {
         // create pin transfer request
         let sale_price_in_wei = 10000;
         await cp1ts(false, false, "immediately before pin_transfer_request is made");
-        await pt_con.create_pin_transfer_request(uid_userA, uid_userB, sale_price_in_wei, pin_1, userA_acc, {from: userA_acc});
+        await pt_con.create_pin_transfer_request(uid_userB, sale_price_in_wei, pin_1, {from: userA_acc});
         await cp1ts(true,  false, "immediately after pin_transfer_request is made");
 
         // ensure the transfer has NOT yet occured
