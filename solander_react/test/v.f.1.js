@@ -10,6 +10,11 @@ contract('Store Ontario\'s Land Data', async (accounts) => {
     })
 
     it('User and Pin creation', async function () {
+
+        // set the Admin account
+        let admin_acc = accounts[9];
+        pt_con.set_admin({from: admin_acc});
+
         // create two users, A and B and two lawyers
         //  - lawyerA is userA's lawyer
         //  - lawyerB is userB's lawyer
@@ -26,7 +31,7 @@ contract('Store Ontario\'s Land Data', async (accounts) => {
         {
             var user = users[i];
             /*Create each user records and validate persistency*/
-            await pt_con.create_user_record(user.uid, user.name, user.bd, user.acc, user.lawyer_uid);
+            await pt_con.create_user_record(user.uid, user.name, user.bd, user.acc, user.lawyer_uid, {from: admin_acc});
             let ret_user = await pt_con.user_record_exists(user.uid);
             assert.equal(ret_user, true, user.name + " creation");
         }
@@ -41,7 +46,7 @@ contract('Store Ontario\'s Land Data', async (accounts) => {
         for(i = 0 ; i < pins.length ; i++)
         {
             pin = pins[i];
-            await pt_con.create_parcel_record(pin.num, pin.co);
+            await pt_con.create_parcel_record(pin.num, pin.co, {from: admin_acc});
             let ret_parcel = await pt_con.parcel_record_exists(pin.num);
             assert.equal(ret_parcel, true);
         }

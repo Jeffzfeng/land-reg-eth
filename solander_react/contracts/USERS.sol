@@ -44,6 +44,26 @@ contract USERS {
         return address(this);
     }
 
+    // Administrator Functions
+    //      - In an actual deployment, the administrator can be hardcoded
+    address admin;
+    bool admin_set;
+
+    function set_admin() public {
+        require(!admin_set);
+        admin_set = true;
+        admin = msg.sender;
+    }
+
+    modifier onlyAdmin {
+        require(msg.sender == admin);
+        _;
+    }
+
+    function change_admin(address _new_admin) public onlyAdmin {
+        admin = _new_admin;
+    }
+
     // mul = master_user_list
     //      (each user needs a unique ID)
     mapping(uint32 => UserRecord) mul;
@@ -51,7 +71,7 @@ contract USERS {
 
     uint32[] user_id_list;
 
-    function create_user_record (uint32 user_id, bytes32 _fn, bytes32 _bd, address _ea, uint32 _li) public {
+    function create_user_record (uint32 user_id, bytes32 _fn, bytes32 _bd, address _ea, uint32 _li) public onlyAdmin {
 
         require(!user_record_exists(user_id));
         mul[user_id] = UserRecord({
