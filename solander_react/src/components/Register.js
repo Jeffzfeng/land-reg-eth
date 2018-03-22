@@ -91,7 +91,7 @@ export default class Register extends Component
 
     handleCreateUser() {
         var userInstance
-
+        var numUsers
         // add error checking later
 
         this.state.web3.eth.getAccounts((error, accounts) => {
@@ -101,10 +101,9 @@ export default class Register extends Component
             console.log("in handleCreateUser")
             return userInstance.get_user_list_length()
         }).then((result) => {
-
-            this.setState({userID: result.c[0] + 1})
-            console.log(this.state.userID)
-
+            numUsers = result.c[0]
+            this.setState({userID: numUsers + 1})
+            
             return userInstance.create_user_record(
                 result.c[0],
                 this.state.web3.fromAscii(this.state.fullName),
@@ -115,11 +114,16 @@ export default class Register extends Component
             )
           }).then((result) => {
             console.log(result)
-             alert("User Created!")
-            console.log("User added to the blockchain")
-            this.setState({sinID: this.state.sinID + 1})
-                //mocking a pin for the land
-            this.handleCreateParcel(this.state.userID)
+            this.setState({numUsers: numUsers + 1})
+
+            // User creation finished 
+            alert("User Created!")
+            console.log("User added to the blockchain, user id is ", this.state.userID)
+            
+            // mocking 3 pin transactions for the user
+            this.handleCreateParcel(4)
+            this.handleCreateParcel(123)
+            this.handleCreateParcel(23275)
 
            })
         })
@@ -133,6 +137,7 @@ export default class Register extends Component
                 this.state.parcel.deployed().then((instance) => {
                 parcelInstance = instance
                 console.log("in handleCreateParcel")
+                console.log("parcel created with PIN of ", pin)
                 return parcelInstance.create_parcel_record(pin, this.state.userID, {from: accounts[0]})
             }).then((result) => {
                 console.log(result)    

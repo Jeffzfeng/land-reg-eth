@@ -114,7 +114,7 @@ export default class Transfer extends Component
         this.state.web3.eth.getAccounts((error, accounts) => {
             this.state.user.deployed().then((instance) => {
             userInstance = instance
-            console.log("in transfer js file");
+            console.log("handling create land transfer");
             return userInstance.get_ethereum_address_from_user_id(
                 this.state.web3.fromAscii(this.state.sellerID),{from: accounts[0]}
             )
