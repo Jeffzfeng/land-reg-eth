@@ -92,7 +92,8 @@ contract PIN_TRANSFER is USERS, PARCELS {
         //  3. no active requests for this property
         require(pptr[_pin].init == false);
 
-        //  [!] 4. assume that each user always has a valid lawyer
+        //  4. assume that each user always has a valid lawyer
+        //      - guaranteed by USERS.create_user_record
 
         pptr[_pin] = PinTransferRequest({
 

@@ -69,6 +69,7 @@ contract USERS {
     uint32[] user_id_list;
 
     function create_user_record (bytes32 _fn, bytes32 _th, address _ea, uint32 _li, uint32 user_id, bool _il) public onlyAdmin { 
+
         require(!user_record_exists(user_id));
         mul[user_id] = UserRecord({
 
@@ -83,6 +84,8 @@ contract USERS {
         });
 
         eth_addr_to_uid[_ea] = user_id;
+        require(is_user_lawyer(_li));
+
         user_id_list.push(user_id);
     }
 
@@ -116,6 +119,10 @@ contract USERS {
 
     function return_lawyer_of_user(uint32 user_id) public view returns (uint32) {
         return mul[user_id].lawyer_id;
+    }
+
+    function is_user_lawyer(uint32 user_id) public view returns (bool) {
+        return mul[user_id].is_lawyer;
     }
 
     function is_equal_user_ethereum_address_and_input (uint32 user_id, address x) public view returns (bool) {
