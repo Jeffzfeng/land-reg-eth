@@ -99,6 +99,10 @@ contract USERS {
         return mul[user_id];
     }
 
+    function get_user_hash_from_uid (uint32 user_id) public view returns (bytes32) {
+        return mul[user_id].tin_hash;
+    }
+
     function get_user_record_from_user_id_tuple (uint32 user_id) public view returns (bytes32, bytes32, address, uint32) {
         return (mul[user_id].full_name, mul[user_id].tin_hash, mul[user_id].ethereum_address, mul[user_id].lawyer_id);
     }
