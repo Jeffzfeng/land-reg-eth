@@ -16,10 +16,10 @@ contract('New user creation', async (accounts) => {
     	// a user list with tin and a corresponding key which will be used as an additional security measure
 		var users_list =
 	    [
+	        {'uid':21, 'name':"lawyerA", 'tin':"07071907", 'key': '3', 'acc':accounts[2], 'is_lawyer': true, 'lawyer_uid':21},
 	        {'uid':1, 'name':"userA", 'tin':"31011905", 'key': '1', 'acc':accounts[0], 'is_lawyer': false, 'lawyer_uid':21},
-	        {'uid':9, 'name':"userB", 'tin':"07061805", 'key': '2', 'acc':accounts[1], 'is_lawyer': false, 'lawyer_uid':29},
-	        {'uid':21, 'name':"lawyerA", 'tin':"07071907", 'key': '3', 'acc':accounts[2], 'is_lawyer': true, 'lawyer_uid':0},
-	        {'uid':29, 'name':"lawyerB", 'tin':"21091990", 'key': '4', 'acc':accounts[3], 'is_lawyer': true, 'lawyer_uid':0}
+	        {'uid':29, 'name':"lawyerB", 'tin':"21091990", 'key': '4', 'acc':accounts[3], 'is_lawyer': true, 'lawyer_uid':29},
+	        {'uid':9, 'name':"userB", 'tin':"07061805", 'key': '2', 'acc':accounts[1], 'is_lawyer': false, 'lawyer_uid':29}
 	    ];
 
 	    // iterate through user list and create them

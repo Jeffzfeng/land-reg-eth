@@ -26,9 +26,8 @@ it('Version History Test', async function () {
     let admin_acc = accounts[9];
     pt_con.set_admin({from: admin_acc});
 
-    // create two users, A and B and two lawyers
-    //  - lawyerA is userA's lawyer
-    //  - lawyerB is userB's lawyer
+    // create three users, and a lawyer for each
+    //  - lawyerX is userX's lawyer
     let userA_acc = accounts[0];
     let userB_acc = accounts[1];
     let userC_acc = accounts[2];
@@ -46,29 +45,29 @@ it('Version History Test', async function () {
 
     // [ ! ] Add TIN + Secret calculation
 
+    await pt_con.create_user_record("lawyerA", "1805-01-31", lawyerA_acc, uid_lawyerA, uid_lawyerA, true, {from: admin_acc});
+    let ret_user_2 = await pt_con.user_record_exists(uid_lawyerA)
+    assert.equal(ret_user_2, true, "lawyerA creation");
+
     await pt_con.create_user_record("userA", "1905-01-31", userA_acc, uid_lawyerA, uid_userA, false, {from: admin_acc});
     let ret_user_1 = await pt_con.user_record_exists(uid_userA);
     assert.equal(ret_user_1, true, "userA creation");
 
-    await pt_con.create_user_record("lawyerA", "1805-01-31", lawyerA_acc, uid_lawyerB, uid_lawyerA, true, {from: admin_acc});
-    let ret_user_2 = await pt_con.user_record_exists(uid_lawyerA)
-    assert.equal(ret_user_2, true, "lawyerA creation");
+    await pt_con.create_user_record("lawyerB", "1860-03-07", lawyerB_acc, uid_lawyerB, uid_lawyerB, true, {from: admin_acc});
+    let ret_user_4 = await pt_con.user_record_exists(uid_lawyerB)
+    assert.equal(ret_user_4, true, "lawyerB creation");
 
     await pt_con.create_user_record("userB", "1960-03-07", userB_acc, uid_lawyerB, uid_userB, false, {from: admin_acc});
     let ret_user_3 = await pt_con.user_record_exists(uid_userB)
     assert.equal(ret_user_3, true, "userB creation");
 
-    await pt_con.create_user_record("lawyerB", "1860-03-07", lawyerB_acc, uid_lawyerA, uid_lawyerB, true, {from: admin_acc});
-    let ret_user_4 = await pt_con.user_record_exists(uid_lawyerB)
-    assert.equal(ret_user_4, true, "lawyerB creation");
+    await pt_con.create_user_record("lawyerC", "1984-08-09", lawyerC_acc, uid_lawyerC, uid_lawyerC, true, {from: admin_acc});
+    let ret_user_6 = await pt_con.user_record_exists(uid_lawyerC)
+    assert.equal(ret_user_6, true, "lawyerC creation");
 
     await pt_con.create_user_record("userC", "1975-06-07", userC_acc, uid_lawyerC, uid_userC, false, {from: admin_acc});
     let ret_user_5 = await pt_con.user_record_exists(uid_userC)
     assert.equal(ret_user_5, true, "userB creation");
-
-    await pt_con.create_user_record("lawyerC", "1984-08-09", lawyerC_acc, uid_lawyerB, uid_lawyerC, true, {from: admin_acc});
-    let ret_user_6 = await pt_con.user_record_exists(uid_lawyerC)
-    assert.equal(ret_user_6, true, "lawyerC creation");
 
     let ret_user_7 = await pt_con.user_record_exists(fake_uid)
     assert.equal(ret_user_7, false, "fake_uid UserRecord should NOT exist");
