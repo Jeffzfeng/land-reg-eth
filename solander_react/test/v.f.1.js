@@ -51,7 +51,7 @@ contract('Store Ontario\'s Land Data', async (accounts) => {
             assert.equal(ret_parcel, true);
         }
 
-        /*Fake user and Pin verrfication*/
+        /*Fake user and Pin verification*/
         let fake_uid = 177;
         let ret_fake_uid = await pt_con.user_record_exists(fake_uid)
         assert.equal(ret_fake_uid, false, "fake_uid UserRecord should NOT exist");
