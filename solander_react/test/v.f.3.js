@@ -1,7 +1,7 @@
 const pin_transfer = artifacts.require('./PIN_TRANSFER.sol')
 
 // owner is a list of testrpc accounts
-contract('Version History Test', async (accounts) => {
+contract('PIN_TRANSFER', async (accounts) => {
 
     pt_con = pin_transfer;
 
