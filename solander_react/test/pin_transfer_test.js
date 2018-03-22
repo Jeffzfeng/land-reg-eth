@@ -22,6 +22,10 @@ contract('PIN_TRANSFER', async (accounts) => {
             assert.equal(Boolean(ret2), ev2, String(msg) + " ;is transfer payment-ready for pin: " + String(pin_1));
         }
 
+        // set the Admin account
+        let admin_acc = accounts[9];
+        pt_con.set_admin({from: admin_acc});
+        
         // create two users, A and B and two lawyers
         //  - lawyerA is userA's lawyer
         //  - lawyerB is userB's lawyer
@@ -36,19 +40,21 @@ contract('PIN_TRANSFER', async (accounts) => {
         let uid_lawyerB = 29;
         let fake_uid = 100;
 
-        await pt_con.create_user_record(uid_userA, "userA", "1905-01-31", userA_acc, uid_lawyerA);
+        // [ ! ] Add TIN + Secret calculation
+
+        await pt_con.create_user_record(uid_userA, "userA", "1905-01-31", userA_acc, false, uid_lawyerA, {from: admin_acc});
         let ret_user_1 = await pt_con.user_record_exists(uid_userA);
         assert.equal(ret_user_1, true, "userA creation");
 
-        await pt_con.create_user_record(uid_lawyerA, "lawyerA", "1805-01-31", lawyerA_acc, uid_lawyerB);
+        await pt_con.create_user_record(uid_lawyerA, "lawyerA", "1805-01-31", lawyerA_acc, true, uid_lawyerB, {from: admin_acc});
         let ret_user_2 = await pt_con.user_record_exists(uid_lawyerA)
         assert.equal(ret_user_2, true, "lawyerA creation");
 
-        await pt_con.create_user_record(uid_userB, "userB", "1960-03-07", userB_acc, uid_lawyerB);
+        await pt_con.create_user_record(uid_userB, "userB", "1960-03-07", userB_acc, false, uid_lawyerB, {from: admin_acc});
         let ret_user_3 = await pt_con.user_record_exists(uid_userB)
         assert.equal(ret_user_3, true, "userB creation");
 
-        await pt_con.create_user_record(uid_lawyerB, "lawyerB", "1860-03-07", lawyerB_acc, uid_lawyerA);
+        await pt_con.create_user_record(uid_lawyerB, "lawyerB", "1860-03-07", lawyerB_acc, true, uid_lawyerA, {from: admin_acc});
         let ret_user_4 = await pt_con.user_record_exists(uid_lawyerB)
         assert.equal(ret_user_4, true, "lawyerB creation");
 
@@ -60,11 +66,11 @@ contract('PIN_TRANSFER', async (accounts) => {
         let pin_2 = 99955;
         let fake_pin = 100999;
 
-        await pt_con.create_parcel_record(pin_1, uid_userA);
+        await pt_con.create_parcel_record(pin_1, uid_userA, {from: admin_acc});
         let ret_parcel_1 = await pt_con.parcel_record_exists(pin_1);
         assert.equal(ret_parcel_1, true);
 
-        await pt_con.create_parcel_record(pin_2, uid_userB);
+        await pt_con.create_parcel_record(pin_2, uid_userB, {from: admin_acc});
         let ret_parcel_2 = await pt_con.parcel_record_exists(pin_2);
         assert.equal(ret_parcel_2, true);
 
@@ -74,7 +80,7 @@ contract('PIN_TRANSFER', async (accounts) => {
         // create pin transfer request
         let sale_price_in_wei = 10000;
         await cp1ts(false, false, "immediately before pin_transfer_request is made");
-        await pt_con.create_pin_transfer_request(uid_userA, uid_userB, sale_price_in_wei, pin_1, userA_acc, {from: userA_acc});
+        await pt_con.create_pin_transfer_request(uid_userB, sale_price_in_wei, pin_1, {from: userA_acc});
         await cp1ts(true,  false, "immediately after pin_transfer_request is made");
 
         // ensure the transfer has NOT yet occured

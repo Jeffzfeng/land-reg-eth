@@ -18,7 +18,7 @@ import "contracts/USERS.sol";
         + split_pin
 */
 
-contract PARCELS {
+contract PARCELS is USERS {
 
     struct ParcelRecord {
 
@@ -55,7 +55,7 @@ contract PARCELS {
     //      (maps user_id to an array of owned parcels)
     mapping(uint32 => uint32[]) mpbu;
 
-    function create_parcel_record (uint32 _pin, uint32 _co) public {
+    function create_parcel_record (uint32 _pin, uint32 _co) public onlyAdmin {
         // [!] protect: only administrators and other functions should be able to create PINs
 
         require(!parcel_record_exists(_pin));
