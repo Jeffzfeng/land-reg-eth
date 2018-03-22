@@ -32,7 +32,16 @@ contract('New user creation', async (accounts) => {
             var tin_hsh = web3.sha3(offst_tin, {encoding: 'hex'});
             
             /*Create each user records and validate persistency*/
-            await user_con.create_user_record(user.uid, user.name, tin_hsh, user.acc, user.is_lawyer, user.lawyer_uid, {from: admin_acc});
+            await user_con.create_user_record
+            (
+                user.name,
+                tin_hsh,
+                user.acc,
+                user.lawyer_uid,
+                user.uid,
+                user.is_lawyer,
+                {from: admin_acc}
+            );
             let ret_user = await user_con.user_record_exists(user.uid);
             assert.equal(ret_user, true, user.name + " creation");
         }

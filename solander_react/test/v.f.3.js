@@ -1,7 +1,7 @@
 const pin_transfer = artifacts.require('./PIN_TRANSFER.sol')
 
 // owner is a list of testrpc accounts
-contract('PIN_TRANSFER', async (accounts) => {
+contract('Version History Test', async (accounts) => {
 
     pt_con = pin_transfer;
 
@@ -9,7 +9,7 @@ beforeEach('setup contract for each test', async function () {
     pt_con = await pin_transfer.new()
 })
 
-it('simple pin transfer', async function () {
+it('Version History Test', async function () {
 
     const cp1ts = async function (ev1, ev2, msg = "") {
         // cpts = check_pin_1_transfer_status
@@ -46,27 +46,27 @@ it('simple pin transfer', async function () {
 
     // [ ! ] Add TIN + Secret calculation
 
-    await pt_con.create_user_record(uid_userA, "userA", "1905-01-31", userA_acc, false, uid_lawyerA, {from: admin_acc});
+    await pt_con.create_user_record("userA", "1905-01-31", userA_acc, uid_lawyerA, uid_userA, false, {from: admin_acc});
     let ret_user_1 = await pt_con.user_record_exists(uid_userA);
     assert.equal(ret_user_1, true, "userA creation");
 
-    await pt_con.create_user_record(uid_lawyerA, "lawyerA", "1805-01-31", lawyerA_acc, true, uid_lawyerB, {from: admin_acc});
+    await pt_con.create_user_record("lawyerA", "1805-01-31", lawyerA_acc, uid_lawyerB, uid_lawyerA, true, {from: admin_acc});
     let ret_user_2 = await pt_con.user_record_exists(uid_lawyerA)
     assert.equal(ret_user_2, true, "lawyerA creation");
 
-    await pt_con.create_user_record(uid_userB, "userB", "1960-03-07", userB_acc, false, uid_lawyerB, {from: admin_acc});
+    await pt_con.create_user_record("userB", "1960-03-07", userB_acc, uid_lawyerB, uid_userB, false, {from: admin_acc});
     let ret_user_3 = await pt_con.user_record_exists(uid_userB)
     assert.equal(ret_user_3, true, "userB creation");
 
-    await pt_con.create_user_record(uid_lawyerB, "lawyerB", "1860-03-07", lawyerB_acc, true, uid_lawyerA, {from: admin_acc});
+    await pt_con.create_user_record("lawyerB", "1860-03-07", lawyerB_acc, uid_lawyerA, uid_lawyerB, true, {from: admin_acc});
     let ret_user_4 = await pt_con.user_record_exists(uid_lawyerB)
     assert.equal(ret_user_4, true, "lawyerB creation");
 
-    await pt_con.create_user_record(uid_userC, "userC", "1975-06-07", userC_acc, false, uid_lawyerC, {from: admin_acc});
+    await pt_con.create_user_record("userC", "1975-06-07", userC_acc, uid_lawyerC, uid_userC, false, {from: admin_acc});
     let ret_user_5 = await pt_con.user_record_exists(uid_userC)
     assert.equal(ret_user_5, true, "userB creation");
 
-    await pt_con.create_user_record(uid_lawyerC, "lawyerC", "1984-08-09", lawyerC_acc, true, uid_lawyerB, {from: admin_acc});
+    await pt_con.create_user_record("lawyerC", "1984-08-09", lawyerC_acc, uid_lawyerB, uid_lawyerC, true, {from: admin_acc});
     let ret_user_6 = await pt_con.user_record_exists(uid_lawyerC)
     assert.equal(ret_user_6, true, "lawyerC creation");
 

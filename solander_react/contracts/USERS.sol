@@ -68,19 +68,18 @@ contract USERS {
 
     uint32[] user_id_list;
 
-    function create_user_record (uint32 user_id, bytes32 _fn, bytes32 _th, address _ea, bool _il, uint32 _li) public onlyAdmin {
-
+    function create_user_record (bytes32 _fn, bytes32 _th, address _ea, uint32 _li, uint32 user_id, bool _il) public onlyAdmin { 
         require(!user_record_exists(user_id));
         mul[user_id] = UserRecord({
-
-            init: true,
 
             full_name: _fn,
             tin_hash: _th,
 
             ethereum_address: _ea,
+            lawyer_id: _li,
+
             is_lawyer: _il,
-            lawyer_id: (_il) ? 0 : (_li)
+            init: true
         });
 
         eth_addr_to_uid[_ea] = user_id;

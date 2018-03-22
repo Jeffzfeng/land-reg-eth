@@ -31,7 +31,17 @@ contract('Store Ontario\'s Land Data', async (accounts) => {
         {
             var user = users[i];
             /*Create each user records and validate persistency*/
-            await pt_con.create_user_record(user.uid, user.name, user.th, user.acc, user.is_lawyer, user.lawyer_uid, {from: admin_acc});
+            //await pt_con.create_user_record(user.uid, user.name, user.th, user.acc, user.is_lawyer, user.lawyer_uid, {from: admin_acc});
+            await pt_con.create_user_record
+            (
+                user.name,
+                user.th,
+                user.acc,
+                user.lawyer_uid,
+                user.uid,
+                user.is_lawyer,
+                {from: admin_acc}
+            );
             let ret_user = await pt_con.user_record_exists(user.uid);
             assert.equal(ret_user, true, user.name + " creation");
         }
