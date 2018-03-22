@@ -43,29 +43,28 @@ contract('New user creation', async (accounts) => {
                 {from: admin_acc}
             );
             let ret_user = await user_con.user_record_exists(user.uid);
+            //assert that the user has been created
             assert.equal(ret_user, true, user.name + " creation");
         }
 
-        // iterate through the user list and confirm that the hash + key are no longer stored as plain text
-
+        // check if value on blockchain is stored as a hash
         for(i = 0 ; i < users_list.length; i++)
         {
         	var user = users_list[i];
         	var tst_offst_tin = user.tin + user.key;
             let tst_hash_tin = await user_con.get_user_hash_from_uid(user.uid);
             let compare_tin_hash = (tst_hash_tin === tst_offst_tin) ? true : false;
-        	assert.equal(compare_tin_hash, false, "tin value hash not been properly hashed");
+        	assert.equal(compare_tin_hash, false, "TIN value not stored as a hash");
         }
 
-        // verifiy 
-
+        // verify that the tin hash on blockchain is the correct hash
         for(i = 0 ; i < users_list.length; i++)
         {
         	var user = users_list[i];
         	var tst_offst_tin = user.tin + user.key;
         	var tst_hash_tin = web3.sha3(tst_offst_tin, {encoding: 'hex'});
         	let hash_tin = await user_con.get_user_hash_from_uid(user.uid);
-        	assert.equal(hash_tin, tst_hash_tin, "tin can be rehashed to the value")
-        }
+        	assert.equal(hash_tin, tst_hash_tin, "tin hash matches the one blockchain")
+        }   
 	})
 })

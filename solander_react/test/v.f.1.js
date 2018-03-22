@@ -20,10 +20,10 @@ contract('Store Ontario\'s Land Data', async (accounts) => {
         //  - lawyerB is userB's lawyer
         var users =
         [
-            {'uid':21, 'name':"lawyerA", 'th':"07071907", 'acc':accounts[2], 'is_lawyer': true, 'lawyer_uid':21},
-            {'uid':1, 'name':"userA", 'th':"31011905", 'acc':accounts[0], 'is_lawyer': false, 'lawyer_uid':21},
-            {'uid':29, 'name':"lawyerB", 'th':"21091990", 'acc':accounts[3], 'is_lawyer': true, 'lawyer_uid':29},
-            {'uid':9, 'name':"userB", 'th':"07061805", 'acc':accounts[1], 'is_lawyer': false, 'lawyer_uid':29}
+            {'uid':1, 'name':"userA", 'th':"931011905", 'acc':accounts[0], 'is_lawyer': false, 'lawyer_uid':21},
+            {'uid':9, 'name':"userB", 'th':"207061805", 'acc':accounts[1], 'is_lawyer': false, 'lawyer_uid':29},
+            {'uid':21, 'name':"lawyerA", 'th':"407071907", 'acc':accounts[2], 'is_lawyer': true, 'lawyer_uid':21},
+            {'uid':29, 'name':"lawyerB", 'th':"521091991", 'acc':accounts[3], 'is_lawyer': true, 'lawyer_uid':29}
         ];
 
         /*Create new user and verify persistency*/
@@ -31,7 +31,6 @@ contract('Store Ontario\'s Land Data', async (accounts) => {
         {
             var user = users[i];
             /*Create each user records and validate persistency*/
-            //await pt_con.create_user_record(user.uid, user.name, user.th, user.acc, user.is_lawyer, user.lawyer_uid, {from: admin_acc});
             await pt_con.create_user_record
             (
                 user.name,
@@ -44,6 +43,13 @@ contract('Store Ontario\'s Land Data', async (accounts) => {
             );
             let ret_user = await pt_con.user_record_exists(user.uid);
             assert.equal(ret_user, true, user.name + " creation");
+
+            // retrieve userRecord and check for equality
+            let results = await pt_con.get_user_record_from_user_id_tuple(user.uid);
+            assert.equal(web3.toAscii(results[0].replace(/0+$/g, "")),user.name);
+            assert.equal(parseInt(results[1].replace(/0+$/g, ""),16), user.th);
+            assert.equal(results[2], user.acc);
+            assert.equal(results[3], user.lawyer_uid);
         }
 
         var pins =
