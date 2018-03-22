@@ -2,11 +2,10 @@ import React, { Component } from 'react'
 import { Route, Switch } from 'react-router-dom'
 
 import Home from './Home'
-//import Login from './Login'
 import Register from './Register'
-import Transfer from './Transfer'
+//import Transfer from './Transfer'
 import Profile from './Profile'
-
+import Search from './Search'
 
 // The Main component renders one of the three provided
 // Routes (provided that one matches). Both the /roster
@@ -22,7 +21,7 @@ render() {
                 <Route exact path='/' component={Home}/>
                 <Route path='/profile' component={Profile}/>
                 <Route path='/register' component={Register}/>
-                <Route Path='/transfer' component={Transfer}/>
+                <Route Path='/search' component={Search}/>
             </Switch>
         );
     }   

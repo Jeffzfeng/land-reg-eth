@@ -75,6 +75,10 @@ contract PARCELS is USERS {
         return master_parcel_list[pin];
     }
 
+    function get_parcel_record_from_pin_tuple (uint32 pin) public view returns (uint32) {
+        return (master_parcel_list[pin].current_owner);
+    }
+
     function return_current_owner_of_pin (uint32 pin) public view returns (uint32) {
         return master_parcel_list[pin].current_owner;
     }
