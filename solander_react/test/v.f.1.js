@@ -20,10 +20,10 @@ contract('Store Ontario\'s Land Data', async (accounts) => {
         //  - lawyerB is userB's lawyer
         var users =
         [
-            {'uid':1, 'name':"userA", 'th':"931011905", 'acc':accounts[0], 'is_lawyer': false, 'lawyer_uid':21},
-            {'uid':9, 'name':"userB", 'th':"207061805", 'acc':accounts[1], 'is_lawyer': false, 'lawyer_uid':29},
-            {'uid':21, 'name':"lawyerA", 'th':"407071907", 'acc':accounts[2], 'is_lawyer': true, 'lawyer_uid':21},
-            {'uid':29, 'name':"lawyerB", 'th':"521091991", 'acc':accounts[3], 'is_lawyer': true, 'lawyer_uid':29}
+            {'uid':21, 'name':"lawyerA", 'th':"407071907", 'acc':accounts[0], 'is_lawyer': true, 'lawyer_uid':21},
+            {'uid':1, 'name':"userA", 'th':"931011905", 'acc':accounts[1], 'is_lawyer': false, 'lawyer_uid':21},
+            {'uid':29, 'name':"lawyerB", 'th':"521091991", 'acc':accounts[2], 'is_lawyer': true, 'lawyer_uid':29},
+            {'uid':9, 'name':"userB", 'th':"207061805", 'acc':accounts[3], 'is_lawyer': false, 'lawyer_uid':29}
         ];
 
         /*Create new user and verify persistency*/
