@@ -6,7 +6,7 @@ contract('Store Ontario\'s Land Data', async (accounts) => {
     pt_con = pin_transfer;
 
     beforeEach('setup contract for each test', async function () {
-        pt_con = await pin_transfer.new()
+        pt_con = await pin_transfer.new();
     })
 
     it('User and Pin creation', async function () {
@@ -53,7 +53,7 @@ contract('Store Ontario\'s Land Data', async (accounts) => {
 
         /*Fake user and Pin verification*/
         let fake_uid = 177;
-        let ret_fake_uid = await pt_con.user_record_exists(fake_uid)
+        let ret_fake_uid = await pt_con.user_record_exists(fake_uid);
         assert.equal(ret_fake_uid, false, "fake_uid UserRecord should NOT exist");
 
         let fake_pin = 100999;

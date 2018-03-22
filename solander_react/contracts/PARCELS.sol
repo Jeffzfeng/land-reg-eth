@@ -129,4 +129,8 @@ contract PARCELS is USERS {
         delete mpbu[user_id][L];
         mpbu[user_id].length--;
     }
+
+    function get_list_owners_by_pin(uint32 pin) public view returns(uint32[]) {
+        return master_parcel_list[pin].previous_owners;
+    }
 } 
