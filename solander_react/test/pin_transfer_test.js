@@ -31,6 +31,8 @@ contract('PIN_TRANSFER', async (accounts) => {
         //  - lawyerA is userA's lawyer
         //  - lawyerB is userB's lawyer
 
+        // use placeholders for TINs
+        //  - secure TIN is not required for this test
         let pT = [0,1,2,3,4]
 
         // raw user data
