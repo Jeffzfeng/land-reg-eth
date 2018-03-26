@@ -21,6 +21,18 @@ contract('PIN_TRANSFER', async (accounts) => {
             let ret2 = await pt_con.is_pin_transfer_ready_for_payment(pin_0);
             assert.equal(Boolean(ret2), ev2, String(msg) + " ;is transfer payment-ready for pin: " + String(pin_0));
         }
+        
+        // number of accounts to be used in this test
+        let num_accounts = 5;
+        const print_account_balances = async function(msg = "") {
+            console.log("account balances: " + msg);
+            for(let i = 0; i < 5; i++){
+                let x = await web3.eth.getBalance(accounts[i]);
+                console.log("account " + i + " " + x);
+            }
+        }
+
+        await print_account_balances("start");
 
         // set the Admin account
         let admin_acc = accounts[9];
@@ -32,7 +44,7 @@ contract('PIN_TRANSFER', async (accounts) => {
         //  - lawyerB is userB's lawyer
 
         // use placeholders for TINs
-        //  - secure TIN is not required for this test
+        //  - real TIN is not required for this test
         let pT = [0,1,2,3,4]
 
         // raw user data
@@ -78,6 +90,8 @@ contract('PIN_TRANSFER', async (accounts) => {
             let ret_user = await pt_con.user_record_exists(x.user_id);
             assert.equal(ret_user, true, x.name + " creation");
         }
+
+        await print_account_balances("after user account creation");
         
         // ensure that a non-existent user is reported as such
         let fake_uid = 100;
@@ -121,8 +135,10 @@ contract('PIN_TRANSFER', async (accounts) => {
         let ret_parcel_3 = await pt_con.parcel_record_exists(fake_pin);
         assert.equal(ret_parcel_3, false, "fake_pin ParcelRecord should NOT exist");
 
+        await print_account_balances("just before pin transfer request");
+
         // PIN TRANSFER REQUEST CREATION
-        let sale_price_in_wei = 10000;
+        let sale_price_in_wei = 1e19;
         await cpts(false, false, "immediately before pin_transfer_request is made");
         await pt_con.create_pin_transfer_request(userB_uid, sale_price_in_wei, pin_0, {from: userA_acc});
         await cpts(true,  false, "immediately after pin_transfer_request is made");
@@ -149,6 +165,8 @@ contract('PIN_TRANSFER', async (accounts) => {
         // send payment for the transfer
         await pt_con.execute_land_transfer(pin_0, {from: userB_acc, value: sale_price_in_wei});
         await cpts(false, false, "the money has been sent; transfer should execute");
+
+        await print_account_balances("just after pin transfer");
 
         // ENSURE THE TRANSACTION OCCURED
         let ret_tf_1 = await pt_con.does_user_own_pin(userA_uid, pin_0);

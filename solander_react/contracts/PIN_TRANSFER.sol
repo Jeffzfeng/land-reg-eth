@@ -56,7 +56,7 @@ contract PIN_TRANSFER is USERS, PARCELS {
         bool init;
 
         uint32 pin;
-        uint32 sale_price_in_wei;
+        uint256 sale_price_in_wei;
         address seller_ethereum_address;
 
         uint32 seller_id;
@@ -76,7 +76,7 @@ contract PIN_TRANSFER is USERS, PARCELS {
     //      (one active request per PIN)
     mapping(uint32 => PinTransferRequest) pptr;
 
-    function create_pin_transfer_request(uint32 _buyer_id, uint32 _sale_price_in_wei, uint32 _pin) public {
+    function create_pin_transfer_request(uint32 _buyer_id, uint256 _sale_price_in_wei, uint32 _pin) public {
     
         // PRE-CONDITIONS
 
@@ -117,57 +117,6 @@ contract PIN_TRANSFER is USERS, PARCELS {
         });
     }
 
-    function modified_create_pin_transfer_request(uint32 _seller_id, uint32 _buyer_id, uint32 _sale_price_in_wei, uint32 _pin, address _sea) public returns (bool){
-
-        // [!] make _sea an optional variable
-
-        // PRE-CONDITIONS
-        //  1. no active requests for this property
-        if(pptr[_pin].init == false){
-            require(pptr[_pin].init);
-            return false;
-        }
-
-        //  2. message sender must be the property owner
-        else if(USERS.is_equal_user_ethereum_address_and_input(_seller_id, msg.sender)){
-            require(USERS.is_equal_user_ethereum_address_and_input(_seller_id, msg.sender));
-            return false;
-        }
-
-        //  3. seller must own the given property
-        else if(_seller_id == PARCELS.return_current_owner_of_pin(_pin)){
-            require(_seller_id == PARCELS.return_current_owner_of_pin(_pin));
-            return false;
-        }
-        else{
-            //  [!] 4. assume that each user always has a valid lawyer
-
-            pptr[_pin] = PinTransferRequest({
-
-                init: true,
-
-                pin: _pin,
-                sale_price_in_wei: _sale_price_in_wei,
-                seller_ethereum_address: _sea,
-
-                seller_id: _seller_id,
-                buyer_id: _buyer_id,
-
-                seller_lawyer_id: USERS.return_lawyer_of_user(_seller_id),
-                buyer_lawyer_id: USERS.return_lawyer_of_user(_buyer_id),
-
-                buyer_approves: false,
-                seller_lawyer_approves: false,
-                buyer_lawyer_approves: false,
-
-                ready_for_payment: false
-                });
-
-        }
-        return true;
-
-    }
-
     function add_approval(uint32 _pin) public {
 
         if(USERS.is_equal_user_ethereum_address_and_input(pptr[_pin].buyer_id, msg.sender)) {
@@ -204,11 +153,12 @@ contract PIN_TRANSFER is USERS, PARCELS {
 
         uint32 _buyer_id = pptr[_pin].buyer_id;
         address _sea = pptr[_pin].seller_ethereum_address;
-        uint32 spiw = pptr[_pin].sale_price_in_wei;
+        uint256 spiw = pptr[_pin].sale_price_in_wei;
 
         require(pptr[_pin].ready_for_payment);
         require(USERS.is_equal_user_ethereum_address_and_input(_buyer_id, msg.sender));
         require(msg.value == spiw);
+        require(msg.sender.balance >= spiw);
 
         // delete zeroes all elements of the transfer request
         delete pptr[_pin];
@@ -230,4 +180,5 @@ contract PIN_TRANSFER is USERS, PARCELS {
     function is_pin_transfer_ready_for_payment(uint32 _pin) public view returns(bool) {
         return pptr[_pin].ready_for_payment;
     }
+
 }
