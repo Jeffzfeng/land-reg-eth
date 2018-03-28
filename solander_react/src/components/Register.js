@@ -18,13 +18,13 @@ export default class Register extends Component
             parcel: null,
             contract: null,
             fullName: '',
-            birthDate: '',
+            TIN: '',
             web3: null
         };
 
         this.handleChangeFullName = this.handleChangeFullName.bind(this)
         //this.handleChangeLastName = this.handleChangeLastName.bind(this)
-        this.handleChangeBirthDate = this.handleChangeBirthDate.bind(this)
+        this.handleChangeTIN = this.handleChangeTIN.bind(this)
         this.handleRegister = this.handleRegister.bind(this)
         this.handleCreateUser = this.handleCreateUser.bind(this)
         this.handleCreateParcel = this.handleCreateParcel.bind(this)
@@ -53,6 +53,7 @@ export default class Register extends Component
         this.setState({user: this.state.contract(UsersContract)})
         this.state.user.setProvider(this.state.web3.currentProvider)
         console.log('User contract called by Register component')
+        
         this.setState({parcel: this.state.contract(ParcelContract)})
         this.state.parcel.setProvider(this.state.web3.currentProvider)
         console.log('Parcel contract called by Register component')
@@ -66,8 +67,8 @@ export default class Register extends Component
     //     this.setState({lastName: event.target.value});
     // }
 
-    handleChangeBirthDate(event) {
-        this.setState({birthDate: event.target.value});
+    handleChangeTIN(event) {
+        this.setState({TIN: event.target.value});
     }
 
     handleRegister(event){
@@ -77,8 +78,8 @@ export default class Register extends Component
             event.preventDefault(); //what does it do?
         }
 
-        else if(this.state.birthDate == null || this.state.birthDate === ''){
-            alert('missing birth date name');
+        else if(this.state.TIN == null || this.state.TIN === ''){
+            alert('missing TIN input');
             event.preventDefault(); //what does it do?
         }
 
@@ -107,7 +108,7 @@ export default class Register extends Component
             return userInstance.create_user_record(
                 result.c[0],
                 this.state.web3.fromAscii(this.state.fullName),
-                this.state.web3.fromAscii(this.state.birthDate), 
+                parseInt(this.state.TIN), 
                 accounts[0],
                 1,
                 {from: accounts[0]}
@@ -157,7 +158,7 @@ export default class Register extends Component
                     </label>
                     <br /><br />
                     <label>
-                        <input className="pure-form pure-input-1-2" type="text" placeholder="brithdate e.g. MM/DD/YYYY" value={this.state.birthDate} onChange={this.handleChangeBirthDate} />
+                        <input className="pure-form pure-input-1-2" type="text" placeholder="TIN" value={this.state.TIN} onChange={this.handleChangeTIN} />
                     </label>
                     <br /><br />
                     <input type="submit" value="Register" className="pure-button pure-button-primary button-xlarge form-button"/>
