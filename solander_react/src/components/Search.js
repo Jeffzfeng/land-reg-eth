@@ -88,14 +88,14 @@ export default class Search extends Component{
         return (
         <div className="pure-g">
           <div className="pure-u-13-24">
-            <form onSubmit={this.handleSearchQuery} className="form pure-form pure-form-alligned">
-                <h1 className="form-title">Search For Land Parcel</h1>
+            <form onSubmit={this.handleSearchQuery} className="form pure-form pure-form-alligned search-form">
+                <h2 className="form-title">Search For Land Parcel</h2>
                 <br /><br /><br /><br />
                 <label>
                     <input className="pure-form pure-input-1-2" type="text" placeholder="PIN" value={this.state.PIN} onChange={this.handleChangePIN} />
                 </label>
                 <br /><br />
-                <input type="submit" value="Search" className="pure-button pure-button-primary button-xlarge form-button"/>
+                <input type="submit" value="Search" className="pure-button pure-button-primary button-large form-button"/>
             </form>
           </div>
          </div>

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import getWeb3 from '../utils/getWeb3'
 import UsersContract from '../../build/contracts/USERS.json'
 import ParcelsContract from '../../build/contracts/PARCELS.json'
+import Transfer from './Transfer'
 
 export default class Profile extends Component
 {
@@ -22,7 +23,10 @@ export default class Profile extends Component
             ownedPINs: [],
             web3: null
         };
-        
+
+        this.handleProfilePage = this.handleProfilePage.bind(this)
+        this.handlePinList = this.handlePinList.bind(this)
+
     }
 
     componentWillMount() {
@@ -42,7 +46,7 @@ export default class Profile extends Component
     }
 
     instantiateContract() {
-        // initiating contract for profile page
+        //initiating contract for profile page
         this.setState({contract: require('truffle-contract')})
         this.setState({userContract: this.state.contract(UsersContract)})
         this.state.userContract.setProvider(this.state.web3.currentProvider)
@@ -105,10 +109,12 @@ export default class Profile extends Component
          }).then((result) => {
             var i
             for (i=0;i<result.length-1;i++){
+              // iterate and set state for each element
               this.setState({
                 ownedPINs: [...this.state.ownedPINs, result[i].c[0], ", "]
               })
             }
+            // set last one without comma
             this.setState({
                 ownedPINs: [...this.state.ownedPINs, result[i].c[0]]
             })
@@ -118,25 +124,33 @@ export default class Profile extends Component
 
   render() {
     return (
-    	<div className="profile">
-   			<h2>Welcome Back, {this.state.fullName}</h2>
-        <p>
-           TIN hash:
-          <span className="profile-field">{this.state.tinHash}</span>
-        </p>
-        <p>
-           LawyerID:
-          <span className="profile-field">{this.state.lawyerID}</span>
-        </p>
-        <p>
-           Eth Wallet Address:
-          <span className="profile-field">{this.state.ethereumAddress}</span>
-        </p>
-        <p>
-            PIN owned: 
-            <span className="profile-field">{this.state.ownedPINs}</span>
-        </p>
-        <p>Pending Transfers: {this.state.pendingTransfers} </p>
+    	<div className="profile-main pure-g">
+          <div className="profile-info pure-u-8-24">
+       			<h2>Welcome Back, {this.state.fullName}</h2>
+            <br /><br />
+            <p>
+               TIN hash :
+              <span className="profile-field"> {this.state.tinHash}</span>
+            </p>
+            <p>
+               LawyerID : 
+              <span className="profile-field"> {this.state.lawyerID}</span>
+            </p>
+            <p>
+               Eth Wallet Address : 
+              <span className="profile-field"> {this.state.ethereumAddress}</span>
+            </p>
+            <p>
+                PIN owned : 
+                <span className="profile-field"> {this.state.ownedPINs}</span>
+            </p>
+            <p>Pending Transfers: {this.state.pendingTransfers} </p>
+        </div>
+        <br /><br />
+        <div className="profile-info pure-u-14-24">
+          <Transfer />
+        </div>
+        <br /><br /><br />
  		</div>
     );
   }

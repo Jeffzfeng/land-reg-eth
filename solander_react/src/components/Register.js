@@ -36,6 +36,7 @@ export default class Register extends Component
         this.handleChangeEaUser = this.handleChangeEaUser.bind(this)
         this.handleChangeEaParcel = this.handleChangeEaParcel.bind(this)
         this.handleParcelSubmit = this.handleParcelSubmit.bind(this)
+        this.handleAdminStatus = this.handleAdminStatus.bind(this)
     }
 
     componentWillMount() {
@@ -244,50 +245,58 @@ export default class Register extends Component
             })  
         })
     }
+    
+    handleAdminStatus () {
+        alert("admin status granted!")
+    }
 
     render(){
         return (
             <div className="pure-g">
                 <div className="pure-u-12-24">
-                <form onSubmit={this.handleRegister} className="form pure-form pure-form-alligned register-form">
-                    <h1 className="form-title">Register New User</h1>
-                    <br /><br /><br />
-                    <label>
-                        <input className="pure-form pure-input-1-2" type="text" placeholder="fullname" value={this.state.fullName} onChange={this.handleChangeFullName} />
-                    </label>
-                    <br /><br />
-                    <label>
-                        <input className="pure-form pure-input-1-2" type="text" placeholder="TIN" value={this.state.TIN} onChange={this.handleChangeTIN} />
-                    </label>
-                    <br /><br />
-                    <label>
-                        <input className="pure-form pure-input-1-2" type="text" placeholder="lawyer ID" value={this.state.lawyerID} onChange={this.handleChangelawyerID} />
-                    </label>
-                    <br /><br />
-                    <label>
-                        <input className="pure-form pure-input-1-2" type="text" placeholder="Ethereum Address" value={this.state.eaUser} onChange={this.handleChangeEaUser} />
-                    </label>
-                    <br /><br />
-                    <input type="submit" value="Register" className="pure-button pure-button-primary button-xlarge form-button"/>
-                    <br /><br />
-                </form>
+                    <form onSubmit={this.handleRegister} className="form pure-form pure-form-alligned register-form">
+                        <h2 className="form-title">Register New User</h2>
+                        <br /><br />
+                        <label>
+                            <input className="pure-form pure-input-1-2" type="text" placeholder="fullname" value={this.state.fullName} onChange={this.handleChangeFullName} />
+                        </label>
+                        <br /><br />
+                        <label>
+                            <input className="pure-form pure-input-1-2" type="text" placeholder="TIN" value={this.state.TIN} onChange={this.handleChangeTIN} />
+                        </label>
+                        <br /><br />
+                        <label>
+                            <input className="pure-form pure-input-1-2" type="text" placeholder="lawyer ID" value={this.state.lawyerID} onChange={this.handleChangelawyerID} />
+                        </label>
+                        <br /><br />
+                        <label>
+                            <input className="pure-form pure-input-1-2" type="text" placeholder="Ethereum Address" value={this.state.eaUser} onChange={this.handleChangeEaUser} />
+                        </label>
+                        <br /><br />
+                        <input type="submit" value="Register" className="pure-button pure-button-primary button-large"/>
+                        <br /><br />
+                    </form>
                 </div>
 
                 <div className="pure-u-12-24">
-                <form onSubmit={this.handleParcelSubmit} className="form pure-form pure-form-alligned register-form">
-                    <h1 className="form-title">Register New Parcel</h1>
-                    <br /><br />
-                    <label>
-                        <input className="pure-form pure-input-1-2" type="text" placeholder="PIN" value={this.state.PIN} onChange={this.handleChangePIN} />
-                    </label>
-                    <br /><br />
-                    <label>
-                        <input className="pure-form pure-input-1-2" type="text" placeholder="Ethereum Address" value={this.state.eaParcel} onChange={this.handleChangeEaParcel} />
-                    </label>
-                    <br /><br />
-                    <input type="submit" value="Create Parcel" className="pure-button pure-button-primary button-xlarge form-button"/>
-                    <br /><br />
-                </form>
+                    <form onSubmit={this.handleParcelSubmit} className="form pure-form pure-form-alligned register-form">
+                        <h2 className="form-title">Register New Parcel</h2>
+                        <br /><br />
+                        <label>
+                            <input className="pure-form pure-input-1-2" type="text" placeholder="PIN" value={this.state.PIN} onChange={this.handleChangePIN} />
+                        </label>
+                        <br /><br />
+                        <label>
+                            <input className="pure-form pure-input-1-2" type="text" placeholder="Ethereum Address" value={this.state.eaParcel} onChange={this.handleChangeEaParcel} />
+                        </label>
+                        <br /><br />
+                        <input type="submit" value="Create Parcel" className="pure-button pure-button-primary button-large"/>
+                        <br /><br />
+                    </form>
+                        <br /><br /><br />
+                    <button className="admin-button btn btn-success" onClick={this.handleAdminStatus}>
+                        Unlock Admin Status!
+                    </button>
                 </div>
 
                 <div className="pure-u-1-1 right-content">
@@ -295,7 +304,7 @@ export default class Register extends Component
                     <h2>Current number of users signed up
                         <div className="bold-red">{this.state.numUsersTot}</div>
                     </h2>
-                    <p> In production, this page will only be avaiable to the administrator</p>
+                    <p> In production, Registration functions will only be available to the Admin</p>
                     <p> For the ethereum address fields, please pick an available address from your wallet </p>
                     <p> When the submit button is pressed, a metamask transaction will pop-up if done correctly</p>
                     <p> *Note: account[0] on your wallet will correspond to account 1 on metamask </p>
