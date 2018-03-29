@@ -55,10 +55,10 @@ contract PARCELS is USERS {
     //      (maps user_id to an array of owned parcels)
     mapping(uint32 => uint32[]) mpbu;
 
-    function create_parcel_record (uint32 _pin, uint32 _co) public {
+    // admin only function
+    function create_parcel_record (uint32 _pin, uint32 _co) public onlyAdmin {
 
-        //let react call backend to get proper error messages
-        //require(!parcel_record_exists(_pin));
+        require(!parcel_record_exists(_pin));
 
         master_parcel_list[_pin].current_owner = _co;
         master_parcel_list[_pin].init = true;

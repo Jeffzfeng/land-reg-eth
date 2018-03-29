@@ -12,6 +12,8 @@ export default class Search extends Component{
             parcel: null,
             contract: null,
             PIN: '',
+            userID: '',
+            ea: '',
             web3: null,
         };
 
@@ -49,7 +51,7 @@ export default class Search extends Component{
         this.setState({PIN: event.target.value});
     }
 
-    handleSearchQuery (event) {
+    handleSearchQuery(event) {
     	if(this.state.PIN === undefined){
             alert('missing PIN');
             event.preventDefault(); 
@@ -63,9 +65,6 @@ export default class Search extends Component{
     handleContractSearch() {
     	var parcelInstance
 
-        // add error checking later
-        //retrieve the seller ethereum id from the sellerid
-        //then call the createlandtransfer function
         this.state.web3.eth.getAccounts((error, accounts) => {
             this.state.parcel.deployed().then((instance) => {
             parcelInstance = instance
@@ -74,13 +73,28 @@ export default class Search extends Component{
             return parcelInstance.get_parcel_record_from_pin_tuple(
                 parseInt(this.state.PIN, 10))
 	        }).then((result) => {
-	        	var PIN_owner = result.c[0]
-	        	if(PIN_owner!==0) {
-	        		console.log("The owner of PIN ", this.state.PIN, " is ", PIN_owner)
+                this.setState({userID: result.c[0]})
+	        	if(this.state.userID!==0) {
+                    this.handleGetEa()
+	        		console.log("The owner of PIN ", this.state.PIN, " is ", this.state.userID)
 	        	}
 	        	else
-	        	   console.log("PIN ", this.state.PIN, " not found in the blockchain!")
+	        	   alert("PIN ", this.state.PIN, " not found in the blockchain!")
 	        })
+        })
+    }
+
+    handleGetEa() {
+        var userInstance
+
+        this.state.web3.eth.getAccounts((error, accounts) => {
+            this.state.parcel.deployed().then((instance) => {   
+                userInstance = instance
+
+                return userInstance.get_ethereum_address_from_user_id(this.state.userID)
+            }).then((result) => {
+                this.setState({ea: result})
+            })
         })
     }
 
@@ -97,7 +111,24 @@ export default class Search extends Component{
                 <br /><br />
                 <input type="submit" value="Search" className="pure-button pure-button-primary button-large form-button"/>
             </form>
-          </div>
+            <br /><br />
+            </div>
+              <div className="profile-info pure-u-13-24 search-results">
+                    <h2>Search Results</h2>
+                <br /><br />
+                <p>
+                    PIN :
+                  <span className="profile-field"> {this.state.PIN}</span>
+                </p>
+                <p>
+                    Is owned by ID : 
+                  <span className="profile-field"> {this.state.userID}</span>
+                </p>
+                <p>
+                   Their Eth Wallet Address is: 
+                  <span className="profile-field"> {this.state.ea}</span>
+                </p>
+             </div>
          </div>
 		);
 	}

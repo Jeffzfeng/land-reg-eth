@@ -72,7 +72,7 @@ contract USERS {
 
     uint32[] user_id_list;
 
-    function create_user_record (bytes32 _fn, bytes32 _th, address _ea, uint32 _li, uint32 user_id, bool _il) public { 
+    function create_user_record (bytes32 _fn, bytes32 _th, address _ea, uint32 _li, uint32 user_id, bool _il) public onlyAdmin { 
 
         require(!user_record_exists(user_id));
         mul[user_id] = UserRecord({
@@ -88,7 +88,10 @@ contract USERS {
         });
 
         eth_addr_to_uid[_ea] = user_id;
-        //require(is_user_lawyer(_li));
+        
+        if(!_il) {
+            require(is_user_lawyer(_li));
+        }
 
         user_id_list.push(user_id);
     }

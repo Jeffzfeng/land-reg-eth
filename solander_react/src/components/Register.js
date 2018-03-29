@@ -152,6 +152,7 @@ export default class Register extends Component
             event.preventDefault()
             console.log(this.state)
             this.handleCreateParcel()
+            console.log("here")
          }
     }
 
@@ -167,18 +168,6 @@ export default class Register extends Component
             console.log("current ethereum account: ", this.state.eaUser)
             console.log("in handleCreateUser")
 
-            /* need to make admin here, so that we can created users, 
-               normally, this "admin" account would be preseeded and not done as a JS
-               function call */
-
-
-
-            //return userInstance.set_admin({from: accounts[0]})   
-
-        // }).then((results) =>{
-        //     //if no errors, user is set as admin
-        //     console.log("user set as admin!")
-        //     console.log(results)
              return userInstance.get_user_list_length()
 
         }).then((result) => {
@@ -193,8 +182,8 @@ export default class Register extends Component
                 this.state.web3.fromAscii(this.state.TIN), 
                 this.state.eaUser,
                 this.state.userID,
-                parseInt(this.state.lawyerID, 10),
-                false,
+                this.state.userID,
+                true,
                 {from: accounts[0]} // this account has to be the admin account!
             )
 
@@ -223,7 +212,8 @@ export default class Register extends Component
                 return userInstance.get_user_id_from_eth_addr(this.state.eaParcel)
                 // get user id from ea 
                 }).then((result) => {
-                    uid = result
+                    uid = result.c[0]
+                    console.log(result.c[0])
                 })
 
             this.state.parcelContract.deployed().then((instance) => {
@@ -247,7 +237,22 @@ export default class Register extends Component
     }
     
     handleAdminStatus () {
-        alert("admin status granted!")
+        var userInstance
+
+        this.state.web3.eth.getAccounts((error, accounts) => {
+
+            this.state.userContract.deployed().then((instance) => {
+                userInstance = instance
+
+                return userInstance.set_admin({from: accounts[0]})   
+
+                }).then((results) =>{
+                     //if no errors, user is set as admin
+                     alert("admin status granted!")
+                     console.log(results)
+                     console.log(accounts[0], " is now the admin")
+                })
+        })
     }
 
     render(){

@@ -174,6 +174,10 @@ a.pure-button-selected {
     margin-right: 0%;
 }
 
+.search-results {
+    padding-left: 13%;
+}
+
 .search-form {
     padding-left: 25%;
     margin-left: 0%;
