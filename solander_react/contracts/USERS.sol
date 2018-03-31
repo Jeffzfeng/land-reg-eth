@@ -52,6 +52,10 @@ contract USERS {
         admin = msg.sender;
     }
 
+    function is_admin () public view returns (bool) {
+        return admin_set;
+    }
+
     modifier onlyAdmin {
         require(msg.sender == admin);
         _;
@@ -84,7 +88,10 @@ contract USERS {
         });
 
         eth_addr_to_uid[_ea] = user_id;
-        require(is_user_lawyer(_li));
+        
+        if(!_il) {
+            require(is_user_lawyer(_li));
+        }
 
         user_id_list.push(user_id);
     }

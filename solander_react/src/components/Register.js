@@ -12,23 +12,31 @@ export default class Register extends Component
     {
         super(props);
         this.state = {
-            numUsers: 0,
-            user: null,
+            userContract: null,
+            web3: null,
             userID: null,
-            parcel: null,
+            numUsersTot: 0,
+            parcelContract: null,
             contract: null,
             fullName: '',
             TIN: '',
-            web3: null
+            lawyerID: '',
+            eaUser: '',
+            eaParcel: '',
+            PIN: '',
         };
 
         this.handleChangeFullName = this.handleChangeFullName.bind(this)
-        //this.handleChangeLastName = this.handleChangeLastName.bind(this)
         this.handleChangeTIN = this.handleChangeTIN.bind(this)
         this.handleRegister = this.handleRegister.bind(this)
         this.handleCreateUser = this.handleCreateUser.bind(this)
         this.handleCreateParcel = this.handleCreateParcel.bind(this)
-        
+        this.handleChangelawyerID = this.handleChangelawyerID.bind(this)
+        this.handleChangePIN= this.handleChangePIN.bind(this)
+        this.handleChangeEaUser = this.handleChangeEaUser.bind(this)
+        this.handleChangeEaParcel = this.handleChangeEaParcel.bind(this)
+        this.handleParcelSubmit = this.handleParcelSubmit.bind(this)
+        this.handleAdminStatus = this.handleAdminStatus.bind(this)
     }
 
     componentWillMount() {
@@ -50,37 +58,76 @@ export default class Register extends Component
     instantiateContract() {
         // initiating contract for register page
         this.setState({contract: require('truffle-contract')})
-        this.setState({user: this.state.contract(UsersContract)})
-        this.state.user.setProvider(this.state.web3.currentProvider)
+        this.setState({userContract: this.state.contract(UsersContract)})
+        this.state.userContract.setProvider(this.state.web3.currentProvider)
         console.log('User contract called by Register component')
         
-        this.setState({parcel: this.state.contract(ParcelContract)})
-        this.state.parcel.setProvider(this.state.web3.currentProvider)
+        this.setState({parcelContract: this.state.contract(ParcelContract)})
+        this.state.parcelContract.setProvider(this.state.web3.currentProvider)
         console.log('Parcel contract called by Register component')
+        this.updateUserNum()
     }
 
     handleChangeFullName(event) {
         this.setState({fullName: event.target.value});
     }
 
-    // handleChangeLastName(event) {
-    //     this.setState({lastName: event.target.value});
-    // }
-
     handleChangeTIN(event) {
         this.setState({TIN: event.target.value});
     }
 
+    handleChangelawyerID(event) {
+        this.setState({lawyerID: event.target.value});
+    }
+
+    handleChangeEaUser(event) {
+        this.setState({eaUser: event.target.value});
+    }
+    
+    handleChangeEaParcel(event) {
+        this.setState({eaParcel: event.target.value});
+    }
+    
+    handleChangePIN(event) {
+        this.setState({PIN: event.target.value});
+    }
+
+    updateUserNum() {
+         var userInstance
+
+         this.state.web3.eth.getAccounts((error, accounts) => {
+            this.state.userContract.deployed().then((instance) => {
+                userInstance = instance
+                return userInstance.get_user_list_length()
+
+            }).then((result) => {
+                console.log(result.c[0])
+                // result.c contains return value from function
+                this.setState({numUsersTot: result.c[0]})
+            })
+        })
+    }
+
     handleRegister(event){
 
-        if(this.state.fullName == null || this.state.fullName === ''){
+        if(this.state.fullName === ''){
             alert('missing full name');
-            event.preventDefault(); //what does it do?
+            event.preventDefault(); 
         }
 
-        else if(this.state.TIN == null || this.state.TIN === ''){
+        else if(this.state.TIN === ''){
             alert('missing TIN input');
-            event.preventDefault(); //what does it do?
+            event.preventDefault(); 
+        }
+
+        else if(this.state.lawyerID === ''){
+            alert('missing lawyerID');
+            event.preventDefault(); 
+        }
+        
+        else if(this.state.eaUser === ''){
+            alert('missing ethereum address');
+            event.preventDefault(); 
         }
 
         else{
@@ -90,85 +137,182 @@ export default class Register extends Component
          }
     }
 
+    handleParcelSubmit(event){
+
+        if(this.state.PIN === ''){
+            alert('missing PIN');
+            event.preventDefault(); 
+        }
+
+        else if(this.state.eaParcel === ''){
+            alert('missing ea input');
+        }
+
+        else{
+            event.preventDefault()
+            console.log(this.state)
+            this.handleCreateParcel()
+            console.log("here")
+         }
+    }
+
     handleCreateUser() {
         var userInstance
         var numUsers
-        // add error checking later
 
         this.state.web3.eth.getAccounts((error, accounts) => {
-            this.state.user.deployed().then((instance) => {
+
+            this.state.userContract.deployed().then((instance) => {
+
             userInstance = instance
-            console.log("current ethereum account: ",accounts)
+            console.log("current ethereum account: ", this.state.eaUser)
             console.log("in handleCreateUser")
-            return userInstance.get_user_list_length()
+
+             return userInstance.get_user_list_length()
+
         }).then((result) => {
+
+            // use num of users + 1 as arbitrary index value
             numUsers = result.c[0]
             this.setState({userID: numUsers + 1})
-            
-            return userInstance.create_user_record(
-                result.c[0],
+
+
+            return userInstance.create_user_record (
                 this.state.web3.fromAscii(this.state.fullName),
-                parseInt(this.state.TIN), 
-                accounts[0],
-                1,
-                {from: accounts[0]}
+                this.state.web3.fromAscii(this.state.TIN), 
+                this.state.eaUser,
+                this.state.userID,
+                this.state.userID,
+                true,
+                {from: accounts[0]} // this account has to be the admin account!
             )
+
           }).then((result) => {
-            console.log(result)
-            this.setState({numUsers: numUsers + 1})
 
             // User creation finished 
             alert("User Created!")
             console.log("User added to the blockchain, user id is ", this.state.userID)
             
-            // mocking 3 pin transactions for the user
-            this.handleCreateParcel(4)
-            this.handleCreateParcel(123)
-            this.handleCreateParcel(23275)
-
+            this.setState({numUsersTot: numUsers + 1})
            })
         })
     }
 
-    handleCreateParcel (int) {
+    // function to handle creation of land parcels
+    handleCreateParcel () {
         var parcelInstance
-        var pin = int
+        var userInstance
+        var uid
 
         this.state.web3.eth.getAccounts((error, accounts) => {
-                this.state.parcel.deployed().then((instance) => {
+
+            this.state.userContract.deployed().then((instance) => {
+                // capture user instance to access user functions
+                userInstance = instance
+                return userInstance.get_user_id_from_eth_addr(this.state.eaParcel)
+                // get user id from ea 
+                }).then((result) => {
+                    uid = result.c[0]
+                    console.log(result.c[0])
+                })
+
+            this.state.parcelContract.deployed().then((instance) => {
+                // capture instance use to access parcel functions
                 parcelInstance = instance
                 console.log("in handleCreateParcel")
-                console.log("parcel created with PIN of ", pin)
-                return parcelInstance.create_parcel_record(pin, this.state.userID, {from: accounts[0]})
+                
             }).then((result) => {
-                console.log(result)    
+                //Solidity function call to create land parcel
+                return parcelInstance.create_parcel_record(
+                    parseInt(this.state.PIN, 10),
+                    uid, 
+                    {from: accounts[0]}
+                )
+            // catch callback of solidity function
+            }).then((result) => {
+                console.log(result)   
+                console.log("parcel created with PIN of ", this.state.PIN, "for user with account address ", this.state.eaParcel) 
             })  
+        })
+    }
+    
+    handleAdminStatus () {
+        var userInstance
+
+        this.state.web3.eth.getAccounts((error, accounts) => {
+
+            this.state.userContract.deployed().then((instance) => {
+                userInstance = instance
+
+                return userInstance.set_admin({from: accounts[0]})   
+
+                }).then((results) =>{
+                     //if no errors, user is set as admin
+                     alert("admin status granted!")
+                     console.log(results)
+                     console.log(accounts[0], " is now the admin")
+                })
         })
     }
 
     render(){
         return (
             <div className="pure-g">
-                <div className="pure-u-13-24">
-                <form onSubmit={this.handleRegister} className="form pure-form pure-form-alligned register-form">
-                    <h1 className="form-title">Register User</h1>
-                    <br /><br /><br />
-                    <label>
-                        <input className="pure-form pure-input-1-2" type="text" placeholder="fullname" value={this.state.fullName} onChange={this.handleChangeFullName} />
-                    </label>
-                    <br /><br />
-                    <label>
-                        <input className="pure-form pure-input-1-2" type="text" placeholder="TIN" value={this.state.TIN} onChange={this.handleChangeTIN} />
-                    </label>
-                    <br /><br />
-                    <input type="submit" value="Register" className="pure-button pure-button-primary button-xlarge form-button"/>
-                </form>
+                <div className="pure-u-12-24">
+                    <form onSubmit={this.handleRegister} className="form pure-form pure-form-alligned register-form">
+                        <h2 className="form-title">Register New User</h2>
+                        <br /><br />
+                        <label>
+                            <input className="pure-form pure-input-1-2" type="text" placeholder="fullname" value={this.state.fullName} onChange={this.handleChangeFullName} />
+                        </label>
+                        <br /><br />
+                        <label>
+                            <input className="pure-form pure-input-1-2" type="text" placeholder="TIN" value={this.state.TIN} onChange={this.handleChangeTIN} />
+                        </label>
+                        <br /><br />
+                        <label>
+                            <input className="pure-form pure-input-1-2" type="text" placeholder="lawyer ID" value={this.state.lawyerID} onChange={this.handleChangelawyerID} />
+                        </label>
+                        <br /><br />
+                        <label>
+                            <input className="pure-form pure-input-1-2" type="text" placeholder="Ethereum Address" value={this.state.eaUser} onChange={this.handleChangeEaUser} />
+                        </label>
+                        <br /><br />
+                        <input type="submit" value="Register" className="pure-button pure-button-primary button-large"/>
+                        <br /><br />
+                    </form>
                 </div>
-                <div className="pure-u-8-24 right-content">
+
+                <div className="pure-u-12-24">
+                    <form onSubmit={this.handleParcelSubmit} className="form pure-form pure-form-alligned register-form">
+                        <h2 className="form-title">Register New Parcel</h2>
+                        <br /><br />
+                        <label>
+                            <input className="pure-form pure-input-1-2" type="text" placeholder="PIN" value={this.state.PIN} onChange={this.handleChangePIN} />
+                        </label>
+                        <br /><br />
+                        <label>
+                            <input className="pure-form pure-input-1-2" type="text" placeholder="Ethereum Address" value={this.state.eaParcel} onChange={this.handleChangeEaParcel} />
+                        </label>
+                        <br /><br />
+                        <input type="submit" value="Create Parcel" className="pure-button pure-button-primary button-large"/>
+                        <br /><br />
+                    </form>
+                        <br /><br /><br />
+                    <button className="admin-button btn btn-success" onClick={this.handleAdminStatus}>
+                        Unlock Admin Status!
+                    </button>
+                </div>
+
+                <div className="pure-u-1-1 right-content">
                     <br /><br />
-                    <h1>Current number of users signed up
-                        <div className="bold-red">{this.state.numUsers}</div>
-                    </h1>
+                    <h2>Current number of users signed up
+                        <div className="bold-red">{this.state.numUsersTot}</div>
+                    </h2>
+                    <p> In production, Registration functions will only be available to the Admin</p>
+                    <p> For the ethereum address fields, please pick an available address from your wallet </p>
+                    <p> When the submit button is pressed, a metamask transaction will pop-up if done correctly</p>
+                    <p> *Note: account[0] on your wallet will correspond to account 1 on metamask </p>
                 </div>
             </div>
         );

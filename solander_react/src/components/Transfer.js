@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import UsersContract from '../../build/contracts/USERS.json'
+import TransferContract from '../../build/contracts/PIN_TRANSFER.json'
 import getWeb3 from '../utils/getWeb3'
 
 export default class Transfer extends Component
@@ -10,19 +11,25 @@ export default class Transfer extends Component
     {
         super(props);
         this.state = {
-            landTransfer: null,
+            userContract: null,
+            landTransferContract: null,
             contract: null,
             web3: null,
-            sellerID: '',
+            buyerEa: '',
             buyerID: '',
             salePrice: '',
-            landPIN: '',
-            ethAddr: '',
             PIN: '',
             EthForTransfer: '',
             numTransfers: 0
         };
         
+        this.handleChangeBuyerEa = this.handleChangeBuyerEa.bind(this)
+        this.handleChangePIN = this.handleChangePIN.bind(this)
+        this.handleChangeSalePrice = this.handleChangeSalePrice.bind(this)
+        this.handleTransfer = this.handleTransfer.bind(this)
+        this.handleGetID = this.handleGetID.bind(this)
+        this.handleTransferRequest = this.handleTransferRequest.bind(this)
+
     }
 
     componentWillMount() {
@@ -42,28 +49,24 @@ export default class Transfer extends Component
     }
 
     instantiateContract() {
-        // initiating contract for register page
+        // initiating contract for transfer page
         this.setState({contract: require('truffle-contract')})
-        this.setState({user: this.state.contract(UsersContract)})
-        this.state.user.setProvider(this.state.web3.currentProvider)
+        this.setState({userContract: this.state.contract(UsersContract)})
+        this.state.userContract.setProvider(this.state.web3.currentProvider)
         console.log('User contract called by Transfer component')
-        console.log("state of user contract: ", this.state.user)
+
+        //initiating contract for transfer page
+        this.setState({landTransferContract: this.state.contract(TransferContract)})
+        this.state.landTransferContract.setProvider(this.state.web3.currentProvider)
+        console.log('Transfer contract called by Transfer component')
     }
 
-    handleChangeSellerID(event) {
-        this.setState({sellerID: event.target.value});
+    handleChangeBuyerEa(event) {
+        this.setState({buyerEa: event.target.value});
     }
 
-    handleChangeBuyerID(event) {
-        this.setState({buyerID: event.target.value});
-    }
-
-    handleChangeLandPIN(event) {
-        this.setState({landPIN: event.target.value});
-    }
-
-    handleChangeEthAddr(event) {
-        this.setState({ethAddr: event.target.value});
+    handleChangePIN(event) {
+        this.setState({PIN: event.target.value});
     }
 
     handleChangeSalePrice(event){
@@ -73,93 +76,88 @@ export default class Transfer extends Component
 
     handleTransfer(event){
 
-        if(this.state.sellerID == null || this.state.sellerID === ''){
-            alert('missing seller ID');
-            event.preventDefault(); //what does it do?
+        if(this.state.buyerEa === ''){
+            alert('missing buyer ethereum address');
+            event.preventDefault(); 
         }
 
-        else if(this.state.buyerID == null || this.state.buyerID === ''){
-            alert('missing buyerID');
-            event.preventDefault(); //what does it do?
-        }
-
-        else if(this.state.ethAddr == null || this.state.ethAddr === ''){
-            alert('missing ethereum address');
-            event.preventDefault(); //what does it do?
-        }
-
-        else if(this.state.salePrice == null || this.state.salePrice === ''){
+        else if(this.state.salePrice === ''){
             alert('mising sale price');
             event.preventDefault();
         }
 
-        else if(this.state.landPIN == null || this.state.landPIN === ''){
+        else if(this.state.PIN === ''){
             alert('missing PIN');
-            event.preventDefault(); //what does it do?
+            event.preventDefault(); 
         }
 
-        else{
+        else {
             event.preventDefault()
             console.log(this.state)
-            //this.handleCreateUser()
+            this.handleGetID()
          }
     }
 
-    handleCreateLandTransfer() {
+    handleGetID() {
         var userInstance
 
-        // add error checking later
-        //retrieve the seller ethereum id from the sellerid
-        //then call the createlandtransfer function
         this.state.web3.eth.getAccounts((error, accounts) => {
-            this.state.user.deployed().then((instance) => {
-            userInstance = instance
-            console.log("handling create land transfer");
-            return userInstance.get_ethereum_address_from_user_id(
-                this.state.web3.fromAscii(this.state.sellerID),{from: accounts[0]}
-            )
-          }).then((result) => {
-              console.log("ethereum address is: ")
-              console.log(result);
-           })
+            // use user contract to get access to user functions
+            this.state.userContract.deployed().then((instance) => {
+                userInstance = instance
+                console.log("handling create land transfer");
+                return userInstance.get_user_id_from_eth_addr(this.state.buyerEa)
+            }).then((result) => {
+              console.log(result.c[0]);
+                if(result.c[0]!==0) {
+                    this.setState({buyerID: result.c[0]})
+                    this.handleTransferRequest()
+                }
+                else {
+                    alert("not a valid ethereum address!")
+                }
+            })
         })
     }
-    //the buyer id is just accounts[0]
-    //this form is for the buyer
+
+    handleTransferRequest() {
+        var transferInstance
+
+        this.state.web3.eth.getAccounts((error, accounts) => {
+        // use user contract to get access to user functions
+            this.state.landTransferContract.deployed().then((instance) => {
+                transferInstance = instance
+                return transferInstance.create_pin_transfer_request(
+                    this.state.buyerID,
+                    parseInt(this.state.salePrice, 10), 
+                    parseInt(this.state.PIN, 10), 
+                    {from: accounts[0]}
+                )
+            }).then((result) => {
+                console.log("transfer request sent to user with ID ", this.state.buyerID)
+            })
+        })
+    }
+
     render(){
         return (
-        <div className="pure-g">
-          <div className="pure-u-13-24">
-            <form onSubmit={this.handleRegister} className="form pure-form pure-form-alligned">
-                <h1 className="form-title">Create New Land Transfer</h1>
-                <br /><br /><br /><br />
+            <form onSubmit={this.handleTransfer} className="form pure-form pure-form-alligned transfer-form">
+                <h2 className="form-title">Create New Land Transfer</h2>
+                <br /><br />
                 <label>
-                    <input className="pure-form pure-input-1-2" type="text" placeholder="Seller ID" value={this.state.sellerID} onChange={this.handleChangeSellerID} />
+                    <input className="pure-form pure-input-1-2" type="text" placeholder="Buyer Ethereum Address" value={this.state.buyerEa} onChange={this.handleChangeBuyerEa} />
                 </label>
                 <br /><br />
                 <label>
                     <input className="pure-form pure-input-1-2" type="text" placeholder="Selling Price" value={this.state.salePrice} onChange={this.handleChangeSalePrice} />
                 </label>
                 <br /><br />
-
                 <label>
-                    <input className="pure-form pure-input-1-2" type="text" placeholder="landPIN" value={this.state.landPIN} onChange={this.handleChangeLandPIN} />
+                    <input className="pure-form pure-input-1-2" type="text" placeholder="PIN" value={this.state.PIN} onChange={this.handleChangePIN} />
                 </label>
                 <br /><br />
-                <label>
-                    <input className="pure-form pure-input-1-2" type="text" placeholder="Seller Ethereum Address" value={this.state.ethAddr} onChange={this.handleChangeEthAddr} />
-                </label>
-                <br /><br />
-                <input type="submit" value="Submit" className="pure-button pure-button-primary button-xlarge form-button"/>
+                <input type="submit" value="Submit" className="pure-button pure-button-primary button-large form-button"/>
             </form>
-         </div>
-        <div className="pure-u-8-24 right-content">
-            <br /><br />
-            <h1>Current number of transfers registered
-                <div className="bold-red">{this.state.numTransfers}</div>
-            </h1>
-        </div>
-      </div>
         );
     }
 }

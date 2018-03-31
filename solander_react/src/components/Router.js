@@ -3,7 +3,6 @@ import { Route, Switch } from 'react-router-dom'
 
 import Home from './Home'
 import Register from './Register'
-//import Transfer from './Transfer'
 import Profile from './Profile'
 import Search from './Search'
 

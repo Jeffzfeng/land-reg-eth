@@ -55,6 +55,7 @@ contract PARCELS is USERS {
     //      (maps user_id to an array of owned parcels)
     mapping(uint32 => uint32[]) mpbu;
 
+    // admin only function
     function create_parcel_record (uint32 _pin, uint32 _co) public onlyAdmin {
 
         require(!parcel_record_exists(_pin));
@@ -64,6 +65,11 @@ contract PARCELS is USERS {
 
         pin_list.push(_pin);
         mpbu[_co].push(_pin);
+    }
+
+    // return pin list for a given uid
+    function get_pin_list_from_uid (uint32 uid) public view returns (uint32[]) {
+        return mpbu[uid];
     }
     
     function parcel_record_exists(uint32 pin) public view returns (bool) {
