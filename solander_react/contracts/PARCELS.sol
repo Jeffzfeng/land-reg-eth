@@ -66,6 +66,18 @@ contract PARCELS is USERS {
         pin_list.push(_pin);
         mpbu[_co].push(_pin);
     }
+    
+    // admin only function
+    function create_parcel_record_test (uint32 _pin, uint32 _co) public {
+
+        //require(!parcel_record_exists(_pin));
+
+        master_parcel_list[_pin].current_owner = _co;
+        master_parcel_list[_pin].init = true;
+
+        pin_list.push(_pin);
+        mpbu[_co].push(_pin);
+    }
 
     // return pin list for a given uid
     function get_pin_list_from_uid (uint32 uid) public view returns (uint32[]) {
