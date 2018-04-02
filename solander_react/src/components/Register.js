@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import getWeb3 from '../utils/getWeb3'
 import UsersContract from '../../build/contracts/USERS.json'
 import ParcelContract from '../../build/contracts/PARCELS.json'
+import RegisterParcel from './RegisterChild/RegisterParcel.js'
 
 export default class Register extends Component
 {
@@ -23,19 +24,15 @@ export default class Register extends Component
             lawyerID: '',
             eaUser: '',
             eaParcel: '',
-            PIN: '',
+            PIN: ''
         };
 
         this.handleChangeFullName = this.handleChangeFullName.bind(this)
         this.handleChangeTIN = this.handleChangeTIN.bind(this)
         this.handleRegister = this.handleRegister.bind(this)
         this.handleCreateUser = this.handleCreateUser.bind(this)
-        this.handleCreateParcel = this.handleCreateParcel.bind(this)
         this.handleChangelawyerID = this.handleChangelawyerID.bind(this)
-        this.handleChangePIN= this.handleChangePIN.bind(this)
         this.handleChangeEaUser = this.handleChangeEaUser.bind(this)
-        this.handleChangeEaParcel = this.handleChangeEaParcel.bind(this)
-        this.handleParcelSubmit = this.handleParcelSubmit.bind(this)
         this.handleAdminStatus = this.handleAdminStatus.bind(this)
     }
 
@@ -84,13 +81,6 @@ export default class Register extends Component
         this.setState({eaUser: event.target.value});
     }
     
-    handleChangeEaParcel(event) {
-        this.setState({eaParcel: event.target.value});
-    }
-    
-    handleChangePIN(event) {
-        this.setState({PIN: event.target.value});
-    }
 
     updateUserNum() {
          var userInstance
@@ -137,25 +127,6 @@ export default class Register extends Component
          }
     }
 
-    handleParcelSubmit(event){
-
-        if(this.state.PIN === ''){
-            alert('missing PIN');
-            event.preventDefault(); 
-        }
-
-        else if(this.state.eaParcel === ''){
-            alert('missing ea input');
-        }
-
-        else{
-            event.preventDefault()
-            console.log(this.state)
-            this.handleCreateParcel()
-            console.log("here")
-         }
-    }
-
     handleCreateUser() {
         var userInstance
         var numUsers
@@ -195,44 +166,6 @@ export default class Register extends Component
             
             this.setState({numUsersTot: numUsers + 1})
            })
-        })
-    }
-
-    // function to handle creation of land parcels
-    handleCreateParcel () {
-        var parcelInstance
-        var userInstance
-        var uid
-
-        this.state.web3.eth.getAccounts((error, accounts) => {
-
-            this.state.userContract.deployed().then((instance) => {
-                // capture user instance to access user functions
-                userInstance = instance
-                return userInstance.get_user_id_from_eth_addr(this.state.eaParcel)
-                // get user id from ea 
-                }).then((result) => {
-                    uid = result.c[0]
-                    console.log(result.c[0])
-                })
-
-            this.state.parcelContract.deployed().then((instance) => {
-                // capture instance use to access parcel functions
-                parcelInstance = instance
-                console.log("in handleCreateParcel")
-                
-            }).then((result) => {
-                //Solidity function call to create land parcel
-                return parcelInstance.create_parcel_record(
-                    parseInt(this.state.PIN, 10),
-                    uid, 
-                    {from: accounts[0]}
-                )
-            // catch callback of solidity function
-            }).then((result) => {
-                console.log(result)   
-                console.log("parcel created with PIN of ", this.state.PIN, "for user with account address ", this.state.eaParcel) 
-            })  
         })
     }
     
@@ -284,20 +217,7 @@ export default class Register extends Component
                 </div>
 
                 <div className="pure-u-12-24">
-                    <form onSubmit={this.handleParcelSubmit} className="form pure-form pure-form-alligned register-form">
-                        <h2 className="form-title">Register New Parcel</h2>
-                        <br /><br />
-                        <label>
-                            <input className="pure-form pure-input-1-2" type="text" placeholder="PIN" value={this.state.PIN} onChange={this.handleChangePIN} />
-                        </label>
-                        <br /><br />
-                        <label>
-                            <input className="pure-form pure-input-1-2" type="text" placeholder="Ethereum Address" value={this.state.eaParcel} onChange={this.handleChangeEaParcel} />
-                        </label>
-                        <br /><br />
-                        <input type="submit" value="Create Parcel" className="pure-button pure-button-primary button-large"/>
-                        <br /><br />
-                    </form>
+                    <RegisterParcel web3={this.state.web3} userContract={this.state.userContract} parcelContract={this.state.parcelContract} />
                         <br /><br /><br />
                     <button className="admin-button btn btn-success" onClick={this.handleAdminStatus}>
                         Unlock Admin Status!
