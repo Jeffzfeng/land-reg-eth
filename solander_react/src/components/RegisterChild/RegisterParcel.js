@@ -107,7 +107,7 @@ export default class RegisterParcel extends Component
             }).then((result) => {
                 //Solidity function call to create land parcel
                 return parcelInstance.create_parcel_record_test (
-                    1,
+                    parseInt(this.state.PIN, 10),
                     1, 
                     {from: accounts[0]}
                 )
