@@ -193,6 +193,13 @@ a.pure-button-selected {
     background: #ffcc80; /* this is an orange */
 }
 
+.approval-button {
+    padding-right: 5%;
+    padding-left: 5%;
+    padding-top: 2%;
+    padding-bottom: 2%;
+    background: #ffcc80; /* this is an orange */
+}
 .title-large{
     text-align: center;
     font-size: 250%;

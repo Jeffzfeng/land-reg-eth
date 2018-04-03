@@ -2,7 +2,21 @@ import React, { Component } from 'react'
 import getWeb3 from '../utils/getWeb3'
 import UsersContract from '../../build/contracts/USERS.json'
 import ParcelsContract from '../../build/contracts/PARCELS.json'
+import TransferContract from '../../build/contracts/PIN_TRANSFER.json'
 import Transfer from './Transfer'
+
+
+const Child = () => (
+  <div>
+      <button className="approval-button btn btn-success" onClick={handleApprovalBuyer}>
+         Buyer: Approve
+     </button>
+  </div>
+)
+
+function handleApprovalBuyer() {
+  alert("approval received from buyer!")
+}
 
 export default class Profile extends Component
 {
@@ -13,6 +27,7 @@ export default class Profile extends Component
         super(props);
         this.state = {
             userContract: null,
+            transferContract: null,
             parcelContract: null,
             contract: null,
             userID: '',
@@ -21,12 +36,17 @@ export default class Profile extends Component
             ethereumAddress: '',
             lawyerID: '',
             ownedPINs: [],
+            pendingEa: '',
+            pendingPIN: '',
+            btnActive: false,
             web3: null
         };
 
         this.handleProfilePage = this.handleProfilePage.bind(this)
         this.handlePinList = this.handlePinList.bind(this)
-
+        this.updatePendingList = this.updatePendingList.bind(this)
+        this.activateButtons = this.activateButtons.bind(this)
+        this.handleApprovalBuyer = this.handleApprovalBuyer.bind(this)
     }
 
     componentWillMount() {
@@ -56,6 +76,10 @@ export default class Profile extends Component
         this.setState({parcelContract: this.state.contract(ParcelsContract)})
         this.state.parcelContract.setProvider(this.state.web3.currentProvider)
         console.log('Parcel contract called by Profile component')
+
+        // initiating contract for profile page
+        this.setState({transferContract: this.state.contract(TransferContract)})
+        this.state.transferContract.setProvider(this.state.web3.currentProvider)
         return this.handleProfilePage()
     }
 
@@ -65,7 +89,7 @@ export default class Profile extends Component
         this.state.web3.eth.getAccounts((error, accounts) => {
             this.state.userContract.deployed().then((instance) => {
             userInstance = instance
-            console.log("current ethereum account: ",accounts)
+            console.log("current ethereum account: ", accounts)
             console.log("in handleProfilePage")
             return userInstance.get_user_id_from_eth_addr(accounts[0])
          }).then((result) => {
@@ -97,6 +121,10 @@ export default class Profile extends Component
       })
     }
 
+    handleApprovalBuyer () {
+      alert("Buyer has approved transfer")
+    }
+
     handlePinList() {
       var parcelInstance
 
@@ -108,18 +136,54 @@ export default class Profile extends Component
             return parcelInstance.get_pin_list_from_uid(this.state.userID)
          }).then((result) => {
             var i
-            for (i=0;i<result.length-1;i++){
-              // iterate and set state for each element
+            if(result.length>0){
+              for (i=0;i<result.length-1;i++){
+                // iterate and set state for each element
+                this.setState({
+                  ownedPINs: [...this.state.ownedPINs, result[i].c[0], ", "]
+                })
+              }
+              // set last one without comma
               this.setState({
-                ownedPINs: [...this.state.ownedPINs, result[i].c[0], ", "]
+                  ownedPINs: [...this.state.ownedPINs, result[i].c[0]]
               })
             }
-            // set last one without comma
-            this.setState({
-                ownedPINs: [...this.state.ownedPINs, result[i].c[0]]
-            })
+              this.updatePendingList()
          })
       })
+    }
+
+    updatePendingList () {
+        var transferInstance
+        var pptr_list
+
+        console.log("here")
+        this.state.web3.eth.getAccounts((error, accounts) => {
+
+            this.state.transferContract.deployed().then((instance) => {
+                transferInstance = instance
+
+                return transferInstance.get_pptr_list()
+            }).then((result) => {
+                // console.log(result)
+                //console.log(result[0].c[0])
+                pptr_list = result[0] 
+                return transferInstance.get_pptr_info(pptr_list.c[0])
+            }).then((result) => {
+                console.log(result)
+                if(parseInt(this.state.userID, 10) === result[0].c[0]) {
+                  this.setState({pendingPIN: result[2].c[0]})
+                  this.setState({pendingEa: result[1]})
+                  this.activateButtons()
+                }
+            })
+        })
+    }
+
+    activateButtons () {
+      this.setState({btnActive: true})
+      console.log(this.state.btnActive)
+      console.log("btnActivated")
     }
 
   render() {
@@ -127,26 +191,36 @@ export default class Profile extends Component
     	<div className="profile-main pure-g">
           <div className="profile-info pure-u-8-24">
        			<h2>Welcome Back, {this.state.fullName}</h2>
+              <br /><br />
+              <p>
+                 TIN hash :
+                <span className="profile-field"> {this.state.tinHash}</span>
+              </p>
+              <p>
+                 LawyerID : 
+                <span className="profile-field"> {this.state.lawyerID}</span>
+              </p>
+              <p>
+                 Eth Wallet Address : 
+                <span className="profile-field"> {this.state.ethereumAddress}</span>
+              </p>
+              <p>
+                  PIN owned : 
+                  <span className="profile-field"> {this.state.ownedPINs}</span>
+              </p>
+            <br /><br /><br />
+            <h2>Pending Transfer</h2>
+              <p>
+                 From Ethereum Adress :
+                <span className="profile-field"> {this.state.pendingEa} </span>
+              </p>
+              <p>
+                 For PIN : 
+                <span className="profile-field"> {this.state.pendingPIN} </span>
+              </p>   
+              {this.state.btnActive && <Child />}   
+          </div>
             <br /><br />
-            <p>
-               TIN hash :
-              <span className="profile-field"> {this.state.tinHash}</span>
-            </p>
-            <p>
-               LawyerID : 
-              <span className="profile-field"> {this.state.lawyerID}</span>
-            </p>
-            <p>
-               Eth Wallet Address : 
-              <span className="profile-field"> {this.state.ethereumAddress}</span>
-            </p>
-            <p>
-                PIN owned : 
-                <span className="profile-field"> {this.state.ownedPINs}</span>
-            </p>
-            <p>Pending Transfers: {this.state.pendingTransfers} </p>
-        </div>
-        <br /><br />
         <div className="profile-info pure-u-14-24">
           <Transfer />
         </div>

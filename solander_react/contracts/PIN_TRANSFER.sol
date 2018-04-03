@@ -75,6 +75,8 @@ contract PIN_TRANSFER is USERS, PARCELS {
     // pptr = pending_pin_transfer_requests
     //      (one active request per PIN)
     mapping(uint32 => PinTransferRequest) pptr;
+    uint32[] pptr_list; 
+
 
     function create_pin_transfer_request(uint32 _buyer_id, uint256 _sale_price_in_wei, uint32 _pin) public {
     
@@ -136,6 +138,8 @@ contract PIN_TRANSFER is USERS, PARCELS {
         //  4. assume that each user always has a valid lawyer
         //      - guaranteed by USERS.create_user_record
 
+        pptr_list.push(_pin);
+
         pptr[_pin] = PinTransferRequest({
 
             init: true,
@@ -147,7 +151,7 @@ contract PIN_TRANSFER is USERS, PARCELS {
             seller_id: _seller_id,
             buyer_id: _buyer_id,
 
-            seller_lawyer_id: 20,
+            seller_lawyer_id: USERS.return_lawyer_of_user(_seller_id),
             buyer_lawyer_id: USERS.return_lawyer_of_user(_buyer_id),
 
             buyer_approves: false,
@@ -175,6 +179,27 @@ contract PIN_TRANSFER is USERS, PARCELS {
         }
 
         check_approvals(_pin);
+    }
+
+    function get_pptr_list () public view returns (uint32[]) {
+        return pptr_list;
+    }
+
+    function get_buyer_pptr (uint32 _buyer_id_cmp) public view returns (address, uint32) {
+
+        for (uint32 i = 0; i < uint32(pptr_list.length) ; i++) {
+            if(_buyer_id_cmp == get_buyer_id_from_pin(pptr_list[i])) {
+                return (pptr[i].seller_ethereum_address, pptr[i].pin);
+            }
+        }
+    }
+
+    function get_pptr_info (uint32 _pin) public view returns (uint32, address, uint32) {
+        return (pptr[_pin].buyer_id, pptr[_pin].seller_ethereum_address, pptr[_pin].pin);
+    }
+
+    function get_buyer_id_from_pin (uint32 _pin) public view returns (uint32) {
+        return pptr[_pin].buyer_id;
     }
 
     function check_approvals(uint32 _pin) private {
