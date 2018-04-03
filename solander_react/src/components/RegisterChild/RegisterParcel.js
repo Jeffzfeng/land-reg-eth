@@ -108,7 +108,7 @@ export default class RegisterParcel extends Component
                 //Solidity function call to create land parcel
                 return parcelInstance.create_parcel_record_test (
                     parseInt(this.state.PIN, 10),
-                    1, 
+                    uid, 
                     {from: accounts[0]}
                 )
             // catch callback of solidity function

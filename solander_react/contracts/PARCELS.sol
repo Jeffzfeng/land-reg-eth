@@ -70,10 +70,10 @@ contract PARCELS is USERS {
     // admin only function
     function create_parcel_record_test (uint32 _pin, uint32 _co) public {
 
-        //require(!parcel_record_exists(_pin));
+       //require(!parcel_record_exists(_pin));
 
-        master_parcel_list[_pin].current_owner = _co;
-        master_parcel_list[_pin].init = true;
+       master_parcel_list[_pin].current_owner = _co;
+       master_parcel_list[_pin].init = true;
 
         pin_list.push(_pin);
         mpbu[_co].push(_pin);
