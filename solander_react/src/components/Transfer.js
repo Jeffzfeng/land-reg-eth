@@ -111,6 +111,7 @@ export default class Transfer extends Component
               console.log(result.c[0]);
                 if(result.c[0]!==0) {
                     this.setState({buyerID: result.c[0]})
+                    console.log("entering create land transfer");
                     this.handleTransferRequest()
                 }
                 else {
@@ -127,7 +128,9 @@ export default class Transfer extends Component
         // use user contract to get access to user functions
             this.state.landTransferContract.deployed().then((instance) => {
                 transferInstance = instance
-                return transferInstance.create_pin_transfer_request(
+                console.log(this.state.PIN)
+                console.log(this.state.salePrice)
+                return transferInstance.create_pin_transfer_request_test (
                     this.state.buyerID,
                     parseInt(this.state.salePrice, 10), 
                     parseInt(this.state.PIN, 10), 

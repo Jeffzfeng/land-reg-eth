@@ -117,6 +117,48 @@ contract PIN_TRANSFER is USERS, PARCELS {
         });
     }
 
+    function create_pin_transfer_request_test (uint32 _buyer_id, uint256 _sale_price_in_wei, uint32 _pin) public {
+    
+        // PRE-CONDITIONS
+
+        //  0. pin must exist
+        //require(PARCELS.parcel_record_exists(_pin));
+
+        //  1. seller must own the given property
+        uint32 _seller_id = PARCELS.return_current_owner_of_pin(_pin);
+
+        //  2. message sender must be the "seller"
+        //require(USERS.is_equal_user_ethereum_address_and_input(_seller_id, msg.sender));
+
+        //  3. no active requests for this property
+        //require(pptr[_pin].init == false);
+
+        //  4. assume that each user always has a valid lawyer
+        //      - guaranteed by USERS.create_user_record
+
+        pptr[_pin] = PinTransferRequest({
+
+            init: true,
+
+            pin: _pin,
+            sale_price_in_wei: _sale_price_in_wei,
+            seller_ethereum_address: msg.sender,
+
+            seller_id: _seller_id,
+            buyer_id: _buyer_id,
+
+            seller_lawyer_id: 20,
+            buyer_lawyer_id: USERS.return_lawyer_of_user(_buyer_id),
+
+            buyer_approves: false,
+            seller_lawyer_approves: false,
+            buyer_lawyer_approves: false,
+
+            ready_for_payment: false
+        });
+
+    }
+
     function add_approval(uint32 _pin) public {
 
         if(USERS.is_equal_user_ethereum_address_and_input(pptr[_pin].buyer_id, msg.sender)) {
