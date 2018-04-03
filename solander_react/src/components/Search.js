@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import ParcelContract from '../../build/contracts/PARCELS.json'
+import UserContract from '../../build/contracts/USERS.json'
 import getWeb3 from '../utils/getWeb3'
 
 export default class Search extends Component{
@@ -10,6 +11,7 @@ export default class Search extends Component{
         super(props);
         this.state = {
             parcel: null,
+            user: null,
             contract: null,
             PIN: '',
             userID: '',
@@ -45,6 +47,11 @@ export default class Search extends Component{
         this.setState({parcel: this.state.contract(ParcelContract)})
         this.state.parcel.setProvider(this.state.web3.currentProvider)
         console.log('User contract called by Search component')
+
+        // initiating contract for register page
+        this.setState({user: this.state.contract(UserContract)})
+        this.state.user.setProvider(this.state.web3.currentProvider)
+        console.log('User contract called by Search component')
     }
 
 	handleChangePIN(event) {
@@ -79,7 +86,7 @@ export default class Search extends Component{
 	        		console.log("The owner of PIN ", this.state.PIN, " is ", this.state.userID)
 	        	}
 	        	else
-	        	   alert("PIN ", this.state.PIN, " not found in the blockchain!")
+	        	   alert("PIN not found in the blockchain!")
 	        })
         })
     }
@@ -88,12 +95,14 @@ export default class Search extends Component{
         var userInstance
 
         this.state.web3.eth.getAccounts((error, accounts) => {
-            this.state.parcel.deployed().then((instance) => {   
+            this.state.user.deployed().then((instance) => {   
                 userInstance = instance
+                console.log(this.state.userID)
 
-                return userInstance.get_ethereum_address_from_user_id(this.state.userID)
-            }).then((result) => {
-                this.setState({ea: result})
+            return userInstance.get_user_record_from_user_id_tuple(this.state.userID)
+         }).then((result) => {
+                console.log(result)
+                this.setState({ea: result[2]})
             })
         })
     }

@@ -120,8 +120,8 @@ contract USERS {
         return mul[user_id].init;
     }
 
-    function get_ethereum_address_from_user_id(uint32 user_id) public view returns (address) {
-        return (mul[user_id].ethereum_address);
+    function get_ethereum_address_from_user_id (uint32 user_id) public view returns (address) {
+        return mul[user_id].ethereum_address;
     }
 
     function return_lawyer_of_user(uint32 user_id) public view returns (uint32) {
