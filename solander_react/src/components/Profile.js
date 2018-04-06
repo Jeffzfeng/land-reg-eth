@@ -4,19 +4,7 @@ import UsersContract from '../../build/contracts/USERS.json'
 import ParcelsContract from '../../build/contracts/PARCELS.json'
 import TransferContract from '../../build/contracts/PIN_TRANSFER.json'
 import Transfer from './Transfer'
-
-
-const Child = () => (
-  <div>
-      <button className="approval-button btn btn-success" onClick={handleApprovalBuyer}>
-         Buyer: Approve
-     </button>
-  </div>
-)
-
-function handleApprovalBuyer() {
-  alert("approval received from buyer!")
-}
+import Approval from './Approval'
 
 export default class Profile extends Component
 {
@@ -46,7 +34,6 @@ export default class Profile extends Component
         this.handlePinList = this.handlePinList.bind(this)
         this.updatePendingList = this.updatePendingList.bind(this)
         this.activateButtons = this.activateButtons.bind(this)
-        this.handleApprovalBuyer = this.handleApprovalBuyer.bind(this)
     }
 
     componentWillMount() {
@@ -113,10 +100,6 @@ export default class Profile extends Component
       })
     }
 
-    handleApprovalBuyer () {
-      alert("Buyer has approved transfer")
-    }
-
     handlePinList() {
       var parcelInstance
 
@@ -145,48 +128,7 @@ export default class Profile extends Component
       })
     }
 
-    // updatePendingList () {
-    //     var transferInstance
-    //     var pptr_list
-
-    //     this.state.web3.eth.getAccounts((error, accounts) => {
-
-    //         this.state.transferContract.deployed().then((instance) => {
-    //             transferInstance = instance
-
-    //             return transferInstance.get_pptr_list()
-    //         }).then((result) => {
-    //             pptr_list = result
-
-    //             // first get all of the pins that are waiting for approval
-    //             var promiseChain = []
-    //             for(var i=0; i<pptr_list.length; i++){
-    //               var buyer_ids = transferInstance.get_buyer_list (pptr_list[0].c[0])
-    //               promiseChain.push(buyer_ids)
-    //             }
-
-    //             //then check if the buyer names match up, if they do, return the record
-    //             matching indexes
-    //             Promise.all(promiseChain).then((result) => {
-    //                 console.log(result)
-    //                 for(var j=0; i<result.length; j++){
-    //                   var
-    //                 }
-    //             })
-            // }).then((result) => {
-            //     console.log(result)
-            //     if(parseInt(this.state.userID, 10) === result[0].c[0]) {
-            //       this.setState({pendingPIN: result[2].c[0]})
-            //       this.setState({pendingEa: result[1]})
-            //       this.activateButtons()
-            //     }
-
-
-    //         })
-    //     })
-    // }
-
-        updatePendingList () {
+    updatePendingList () {
         var transferInstance
         var pin_index = 0;
         var found = false;
@@ -199,7 +141,7 @@ export default class Profile extends Component
             }).then((result) => {
                 console.log(result)
                 for (var i=0; i<result.length; i++) {
-                  
+
                   // eslint-disable-next-line
                   if(this.state.userID == result[i].c[0]) { 
                     pin_index = i;
@@ -260,7 +202,7 @@ export default class Profile extends Component
                  For PIN : 
                 <span className="profile-field"> {this.state.pendingPIN} </span>
               </p>   
-              {this.state.btnActive && <Child />}   
+              {this.state.btnActive && <Approval uid={this.state.userID} pin={this.state.pendingPIN} parcelContract={this.state.parcelContract} web3={this.state.web3} userContract={this.state.userContract} transferContract={this.state.transferContract}/>}   
           </div>
             <br /><br />
         <div className="profile-info pure-u-14-24">

@@ -249,32 +249,26 @@ contract PIN_TRANSFER is USERS, PARCELS {
         _sea.transfer(spiw);
     }
 
-    function execute_land_transfer_test (uint32 _pin) public payable {
-        // [!] REQUIRES RIGOROUS SECURITY VALIDATION
-        // [!] Unfinished
 
-        uint32 _buyer_id = pptr[_pin].buyer_id;
-        address _sea = pptr[_pin].seller_ethereum_address;
-        //uint256 spiw = pptr[_pin].sale_price_in_wei;
+    function delete_pptr_by_pin(uint32 _pin) public {
+        
+        for (uint i=0; i<buyer_id_list.length; i++){
+            if(pptr[_pin].buyer_id == buyer_id_list[i]){
+                delete buyer_id_list[i];
+            }
+        }
 
-        //require(pptr[_pin].ready_for_payment);
-        //require(USERS.is_equal_user_ethereum_address_and_input(_buyer_id, msg.sender));
-        //require(msg.value == spiw);
-        //require(msg.sender.balance >= spiw);
+        for (uint j=0; j<pptr_list.length; j++){
+            if(pptr[_pin].pin == pptr_list[j]){
+                delete pptr_list[j];
+            }
+        }
 
-        // delete zeroes all elements of the transfer request
-        delete pptr[_pin];
-
-        // land transfer
-        //  [!] external contract call: should it come at the end?
-        //  [!] what if the pin transfer fails?
-        PARCELS.transfer_pin(_pin, _buyer_id);
-
-        // money transfer
-        //  [!] what if money the transfer fails?
-        //_sea.transfer(spiw);
+        pptr[_pin].seller_ethereum_address = address(0);
+        pptr[_pin].buyer_id = 0;
+        pptr[_pin].seller_id = 0;
+        pptr[_pin].init = false;
     }
-
 
     function is_pin_transfer_request_active(uint32 _pin) public view returns(bool) {
         return pptr[_pin].init;

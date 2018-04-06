@@ -109,11 +109,6 @@ export default class Register extends Component
             alert('missing TIN input');
             event.preventDefault(); 
         }
-
-        else if(this.state.lawyerID === ''){
-            alert('missing lawyerID');
-            event.preventDefault(); 
-        }
         
         else if(this.state.eaUser === ''){
             alert('missing ethereum address');
@@ -152,7 +147,7 @@ export default class Register extends Component
                 this.state.web3.fromAscii(this.state.fullName),
                 this.state.web3.fromAscii(this.state.TIN), 
                 this.state.eaUser,
-                this.state.userID,
+                1,
                 this.state.userID,
                 true,
                 {from: accounts[0]} // this account has to be the admin account!
@@ -201,10 +196,6 @@ export default class Register extends Component
                         <br /><br />
                         <label>
                             <input className="pure-form pure-input-1-2" type="text" placeholder="TIN" value={this.state.TIN} onChange={this.handleChangeTIN} />
-                        </label>
-                        <br /><br />
-                        <label>
-                            <input className="pure-form pure-input-1-2" type="text" placeholder="lawyer ID" value={this.state.lawyerID} onChange={this.handleChangelawyerID} />
                         </label>
                         <br /><br />
                         <label>

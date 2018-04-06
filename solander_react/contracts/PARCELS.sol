@@ -128,6 +128,26 @@ contract PARCELS is USERS {
         mpbu[_new_owner].push(_pin);
     }
 
+    function transfer_pin_test (uint32 _pin, uint32 _new_owner) public {
+        // [!] inef.
+        // PRECONDITIONS
+        //  0. [!] restrict callers: protect via pre-validation
+        //  1. require(parcel_record_exists(_pin));
+        // [!] handle "not found" errors
+
+        // make it so _co no longer owns _pin
+        uint32 _co = master_parcel_list[_pin].current_owner;
+        master_parcel_list[_pin].previous_owners.push(_co);
+
+        uint index;
+        index = get_mpbu_index_from_pin(_co, _pin);
+        delete mpbu[_co][index];
+
+        // make it so new_owner owns _pin
+        master_parcel_list[_pin].current_owner = _new_owner;
+        mpbu[_new_owner].push(_pin);
+    }
+
     function get_mpbu_index_from_pin(uint32 user_id, uint32 _pin) internal view returns (uint) {
         for(uint i = 0; i < mpbu[user_id].length; ++i) {
             if(mpbu[user_id][i] == _pin){
