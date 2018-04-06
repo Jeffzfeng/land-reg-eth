@@ -76,7 +76,7 @@ contract PIN_TRANSFER is USERS, PARCELS {
     //      (one active request per PIN)
     mapping(uint32 => PinTransferRequest) pptr;
     uint32[] pptr_list; 
-
+    uint32[] buyer_id_list;
 
     function create_pin_transfer_request(uint32 _buyer_id, uint256 _sale_price_in_wei, uint32 _pin) public {
     
@@ -139,6 +139,7 @@ contract PIN_TRANSFER is USERS, PARCELS {
         //      - guaranteed by USERS.create_user_record
 
         pptr_list.push(_pin);
+        buyer_id_list.push(_buyer_id);
 
         pptr[_pin] = PinTransferRequest({
 
@@ -185,21 +186,29 @@ contract PIN_TRANSFER is USERS, PARCELS {
         return pptr_list;
     }
 
+    function get_pin_from_index (uint _index) public view returns (uint32) {
+        return pptr_list[_index];
+    }
+
+    function get_buyer_list () public view returns (uint32[]) {
+        return buyer_id_list;
+    }
+
     function get_buyer_pptr (uint32 _buyer_id_cmp) public view returns (address, uint32) {
 
-        for (uint32 i = 0; i < uint32(pptr_list.length) ; i++) {
+        for (uint32 i = 0; i < uint32(pptr_list.length); i++) {
             if(_buyer_id_cmp == get_buyer_id_from_pin(pptr_list[i])) {
                 return (pptr[i].seller_ethereum_address, pptr[i].pin);
             }
         }
     }
 
+    function get_buyer_id_from_pin (uint32 _pin) public view returns (uint32) {
+        return pptr[_pin].buyer_id;    
+    } 
+
     function get_pptr_info (uint32 _pin) public view returns (uint32, address, uint32) {
         return (pptr[_pin].buyer_id, pptr[_pin].seller_ethereum_address, pptr[_pin].pin);
-    }
-
-    function get_buyer_id_from_pin (uint32 _pin) public view returns (uint32) {
-        return pptr[_pin].buyer_id;
     }
 
     function check_approvals(uint32 _pin) private {
@@ -239,6 +248,33 @@ contract PIN_TRANSFER is USERS, PARCELS {
         //  [!] what if money the transfer fails?
         _sea.transfer(spiw);
     }
+
+    function execute_land_transfer_test (uint32 _pin) public payable {
+        // [!] REQUIRES RIGOROUS SECURITY VALIDATION
+        // [!] Unfinished
+
+        uint32 _buyer_id = pptr[_pin].buyer_id;
+        address _sea = pptr[_pin].seller_ethereum_address;
+        //uint256 spiw = pptr[_pin].sale_price_in_wei;
+
+        //require(pptr[_pin].ready_for_payment);
+        //require(USERS.is_equal_user_ethereum_address_and_input(_buyer_id, msg.sender));
+        //require(msg.value == spiw);
+        //require(msg.sender.balance >= spiw);
+
+        // delete zeroes all elements of the transfer request
+        delete pptr[_pin];
+
+        // land transfer
+        //  [!] external contract call: should it come at the end?
+        //  [!] what if the pin transfer fails?
+        PARCELS.transfer_pin(_pin, _buyer_id);
+
+        // money transfer
+        //  [!] what if money the transfer fails?
+        //_sea.transfer(spiw);
+    }
+
 
     function is_pin_transfer_request_active(uint32 _pin) public view returns(bool) {
         return pptr[_pin].init;

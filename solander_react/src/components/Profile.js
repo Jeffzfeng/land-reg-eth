@@ -70,12 +70,10 @@ export default class Profile extends Component
         this.setState({contract: require('truffle-contract')})
         this.setState({userContract: this.state.contract(UsersContract)})
         this.state.userContract.setProvider(this.state.web3.currentProvider)
-        console.log('User contract called by Profile component')
 
         // initiating contract for profile page
         this.setState({parcelContract: this.state.contract(ParcelsContract)})
         this.state.parcelContract.setProvider(this.state.web3.currentProvider)
-        console.log('Parcel contract called by Profile component')
 
         // initiating contract for profile page
         this.setState({transferContract: this.state.contract(TransferContract)})
@@ -89,8 +87,6 @@ export default class Profile extends Component
         this.state.web3.eth.getAccounts((error, accounts) => {
             this.state.userContract.deployed().then((instance) => {
             userInstance = instance
-            console.log("current ethereum account: ", accounts)
-            console.log("in handleProfilePage")
             return userInstance.get_user_id_from_eth_addr(accounts[0])
          }).then((result) => {
             this.setState({userID: result})
@@ -108,10 +104,6 @@ export default class Profile extends Component
             var lawyer_id = result[3].c[0]
 
            //  // print for testing
-         	  console.log(fullname)
-         	  console.log(th)
-            console.log(lawyer_id)
-            console.log(eth_address)
          	  this.setState({fullName: fullname})
             this.setState({tinHash: th})
             this.setState({ethereumAddress: eth_address})
@@ -153,31 +145,81 @@ export default class Profile extends Component
       })
     }
 
-    updatePendingList () {
-        var transferInstance
-        var pptr_list
+    // updatePendingList () {
+    //     var transferInstance
+    //     var pptr_list
 
-        console.log("here")
+    //     this.state.web3.eth.getAccounts((error, accounts) => {
+
+    //         this.state.transferContract.deployed().then((instance) => {
+    //             transferInstance = instance
+
+    //             return transferInstance.get_pptr_list()
+    //         }).then((result) => {
+    //             pptr_list = result
+
+    //             // first get all of the pins that are waiting for approval
+    //             var promiseChain = []
+    //             for(var i=0; i<pptr_list.length; i++){
+    //               var buyer_ids = transferInstance.get_buyer_list (pptr_list[0].c[0])
+    //               promiseChain.push(buyer_ids)
+    //             }
+
+    //             //then check if the buyer names match up, if they do, return the record
+    //             matching indexes
+    //             Promise.all(promiseChain).then((result) => {
+    //                 console.log(result)
+    //                 for(var j=0; i<result.length; j++){
+    //                   var
+    //                 }
+    //             })
+            // }).then((result) => {
+            //     console.log(result)
+            //     if(parseInt(this.state.userID, 10) === result[0].c[0]) {
+            //       this.setState({pendingPIN: result[2].c[0]})
+            //       this.setState({pendingEa: result[1]})
+            //       this.activateButtons()
+            //     }
+
+
+    //         })
+    //     })
+    // }
+
+        updatePendingList () {
+        var transferInstance
+        var pin_index = 0;
+        var found = false;
+
         this.state.web3.eth.getAccounts((error, accounts) => {
 
             this.state.transferContract.deployed().then((instance) => {
                 transferInstance = instance
-
-                return transferInstance.get_pptr_list()
-            }).then((result) => {
-                // console.log(result)
-                //console.log(result[0].c[0])
-                pptr_list = result[0] 
-                return transferInstance.get_pptr_info(pptr_list.c[0])
+                return transferInstance.get_buyer_list ()
             }).then((result) => {
                 console.log(result)
-                if(parseInt(this.state.userID, 10) === result[0].c[0]) {
-                  this.setState({pendingPIN: result[2].c[0]})
-                  this.setState({pendingEa: result[1]})
-                  this.activateButtons()
+                for (var i=0; i<result.length; i++) {
+                  
+                  // eslint-disable-next-line
+                  if(this.state.userID == result[i].c[0]) { 
+                    pin_index = i;
+                    found = true;
+                  }
                 }
+                
+                if(found === true) {
+                        return transferInstance.get_pin_from_index(pin_index)
+                  .then((result) => {
+
+                      return transferInstance.get_pptr_info(result.c[0])
+                  }).then(result => {
+                      this.setState({pendingPIN: result[2].c[0]})
+                      this.setState({pendingEa: result[1]})
+                      this.activateButtons()
+                  })
+               }
             })
-        })
+        }) 
     }
 
     activateButtons () {
